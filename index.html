@@ -392,14 +392,14 @@
             let msg = "";
             let msgClass = "";
 
-            // Ngân hàng lời nhắn
+           // Ngân hàng lời nhắn
             const msgList = {
-                lv1: ["Vạn sự khởi đầu nan, đừng nản chí {ten} nhé!", "Thất bại là mẹ thành công, cố lên {ten} ơi!", "Cần ôn kỹ lại lý thuyết nha {ten}, em sẽ tiến bộ.", "Đừng buồn nhé {ten}, lần sau chắc chắn sẽ tốt hơn!", "Cố gắng hơn chút nữa nhé {ten}, mỗi lần thử là một bước tiến rồi!"],
-                lv2: ["Đã có cố gắng, nhưng cần tập trung hơn nha {ten}.", "Khá hơn rồi đó {ten}, nhưng chưa đạt phong độ tốt nhất đâu.", "Cẩn thận hơn xíu nữa là điểm cao ngay thôi {ten} ơi.", "Ôn luyện bài tập cơ bản nhiều hơn nhé {ten}.", "Tiếp tục nỗ lực nhé {ten}, sắp chạm mốc Khá rồi."],
-                lv3: ["Kết quả khá tốt, phát huy nhé {ten}!", "Nền tảng khá ổn rồi, {ten} cố gắng luyện đề nhiều hơn nha.", "Sắp giỏi rồi, cố thêm chút nữa nào {ten}.", "Điểm này cho thấy {ten} đã nắm được kiến thức cơ bản. Tiếp tục cố gắng nhé!", "Khá ổn đó {ten}, lần sau mục tiêu 8+ nhé!"],
-                lv4: ["Kết quả ổn đó, chúc mừng {ten} vì sự tiến bộ này!", "Rất đáng khen, {ten} giữ vững phong độ nhé.", "Điểm số đẹp, chúc mừng {ten}! Tiếp tục phát huy nhé!", "{ten} ơi, chỉ cần cẩn thận chút xíu nữa là chạm mốc cao hơn rồi!", "{ten} đang học rất hiệu quả, cố gắng giữ nhịp này nha!"],
-                lv5: ["🌟 Một bài làm chất lượng cao, tiếp tục giữ phong độ nhé {ten}! 🌟", "Kiến thức của {ten} khá vững rồi, chúc mừng em! 🚀", "⭐ Chỉ thiếu chút xíu nữa là điểm tuyệt đối rồi {ten} ơi.", "🤩 Tuyệt vời ông mặt trời! Chúc mừng {ten}!", "💯 Phong độ đỉnh chóp, tiếp tục thế này nhé {ten}!"],
-                lv6: ["🏆 ĐỈNH CHÓP! {ten} là niềm tự hào của cả lớp! 🏆", "🌟 Quá xịn rồi {ten}, đúng chuẩn học sinh gương mẫu!", "🔥 Đỉnh của chóp! Chúc mừng {ten} nhé.", "✨ Kết quả rất ấn tượng, 10 điểm cho sự nỗ lực của {ten}.", "Tuyệt vời ông mặt trời! Chúc mừng {ten}! 👍👍👍"]
+                lv1: ["Vạn sự khởi đầu nan 🌱, đừng nản chí {ten} nhé! 💪", "Thất bại là mẹ thành công 🐣, cố lên {ten} ơi! 🚀", "Cần ôn kỹ lại lý thuyết nha {ten} 📚, em sẽ tiến bộ nhanh thôi! 💪", "Đừng buồn nhé {ten} 🤗, lần sau chắc chắn sẽ tốt hơn nhiều! 🌈", "Cố gắng hơn chút nữa nhé {ten} 💪, mỗi lần thử là một bước tiến rồi! 🏃"],
+                lv2: ["Đã có cố gắng 👍, nhưng cần tập trung hơn nha {ten} ⚡", "Khá hơn rồi đó {ten} 🌟, nhưng chưa đạt phong độ tốt nhất đâu 😉", "Cẩn thận hơn xíu nữa là điểm cao ngay thôi {ten} ơi 🎯", "Ôn luyện bài tập cơ bản nhiều hơn nhé {ten} 📚", "Tiếp tục nỗ lực nhé {ten} 💪, sắp chạm mốc Khá rồi 🌻"],
+                lv3: ["Kết quả khá tốt 👏, phát huy nhé {ten}! 😉", "Nền tảng khá ổn rồi 👏, {ten} cố gắng luyện đề nhiều hơn nha 🔥", "Sắp giỏi rồi 🌟, cố thêm chút nữa nào {ten} 🚴", "Điểm này cho thấy {ten} đã nắm được kiến thức cơ bản 👍. Tiếp tục cố gắng nhé! 🌈", "Khá ổn đó {ten} 😎, lần sau mục tiêu 8+ nhé! 💪"],
+                lv4: ["Kết quả ổn đó 👏, chúc mừng {ten} vì sự tiến bộ này! 🎉", "Rất đáng khen 👏, {ten} giữ vững phong độ nhé 😉", "Điểm số đẹp 🌟, chúc mừng {ten}! Tiếp tục phát huy nhé! 🚀", "{ten} ơi, chỉ cần cẩn thận chút xíu nữa là chạm mốc cao hơn rồi! 🔥", "{ten} đang học rất hiệu quả 🔥, cố gắng giữ nhịp này nha! 😎"],
+                lv5: ["Một bài làm chất lượng cao 🌟, tiếp tục giữ phong độ nhé {ten}! 🚀", "Kiến thức của {ten} khá vững rồi 🌈, chúc mừng em! 👏", "Chỉ thiếu chút xíu nữa là điểm tuyệt đối rồi {ten} ơi 🤩", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 👏", "Phong độ đỉnh chóp 👍, tiếp tục thế này nhé {ten}! 🌟"],
+                lv6: ["ĐỈNH CHÓP! 💯 {ten} là niềm tự hào của cả lớp! 😍", "Quá xịn rồi {ten} 🎉, đúng chuẩn học sinh gương mẫu! 👍", "Đỉnh của chóp! 👍 Chúc mừng {ten} nhé 🎉", "Kết quả rất ấn tượng 🤩, 10 điểm tròn trịa cho sự nỗ lực của {ten} 🎉", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 🎉"]
             };
 
             // Chọn nhóm lời nhắn
@@ -427,7 +427,90 @@
             feedbackDiv.className = `feedback-msg ${msgClass}`;
             feedbackDiv.innerHTML = `<strong>Lời Thầy nhắn:</strong><br>"${msg}"`;
 
-            // HIỆU ỨNG PHÁO HOA (Nếu điểm >= 8)
+            // --- PHẦN MỚI: HIỂN THỊ MEME VUI ---
+            // Kho meme (URL trực tiếp, load nhanh, tôi chọn meme vui, tích cực, phù hợp học sinh)
+            const memeList = {
+                low: [ // Chỉ 1 meme an ủi cho dưới 6 điểm (lv1 + lv2)
+                    "https://i.etsystatic.com/57374706/r/il/a64e60/7342492873/il_fullxfull.7342492873_djeg.jpg"  // This is Fine dog - hài hước "không sao đâu, cố lên"
+                ],
+                lv3: [ // 6-7 điểm: khá tốt, cố thêm chút
+                    "https://cdn.eduadvisor.my/articles/2018/08/Hilarious-Exam-Meme-Charts-07-Things-i-think-during-the-exam.png",
+                    "https://external-preview.redd.it/osZHapvJmkLLPmUkA9TP1OC_BEbFV97ESI-0NKr_XvI.jpg?auto=webp&s=964fa4a1ddd3024acd1df37e8547edce8c3d51e4",
+                    "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=1578894622142324",
+                    "https://i.redd.it/llwtnsv0mmo91.jpg",
+                    "https://new.boredteachers.com/wp-content/uploads/2022/01/Toxic-teachers-cover-2.jpg"
+                ],
+                lv4: [ // 7-8 điểm: rất tốt, success!
+                    "https://www.mostlyblogging.com/wp-content/uploads/2025/06/ChatGPT-Image-Dec-4-2025-06_23_09-AM-700x467.png",  // Success Kid kiểu celebration
+                    "https://www.thesun.co.uk/wp-content/uploads/2022/02/NINTCHDBPICT000706326625.jpg?strip=all&w=712",
+                    "https://external-preview.redd.it/iHF2sPRodufnjzOnHCSD_xAGFa0phSTeIB8UFVY_jDA.jpg?auto=webp&s=f5e5ceb20df740b78745960077d8c2be4bb95570",
+                    "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=10171281177715274",
+                    "https://www.tiktok.com/api/img/?itemId=7549048222145121591&location=0&aid=1988"
+                ],
+                lv5: [ // 8-9 điểm: giỏi lắm, smart!
+                    "https://file.aiquickdraw.com/tool-page/section-images/1755510614473utuxcrk5.webp",  // Spongebob rainbow kiểu "imagination/smart"
+                    "https://bylo.ai/cdn-cgi/image/width=600,height=400,fit=scale-down,quality=85,format=webp/https://file.aiquickdraw.com/tool-page/section-images/1755509897072grkvlinq.webp",
+                    "https://preview.redd.it/whats-the-best-spongebob-meme-ever-v0-bw1b0nmho38f1.jpeg?width=640&crop=smart&auto=webp&s=43c0fdfd8b3dbac8f054d9d4f9e34d14224a8472",
+                    "https://davidwilliamrosales.com/wp-content/uploads/2022/06/screen-shot-2022-06-26-at-4.02.45-pm.png",
+                    "https://cdn-useast1.kapwing.com/static/templates/spongebob-and-patrick-feeding-squidward-fruit-meme-template-regular-df7a6bf1.webp"
+                ],
+                lv6: [ // Trên 9 điểm: đỉnh chóp, epic win!
+                    "https://i.redd.it/jxf8utgw2r9e1.jpeg",
+                    "https://static.boredpanda.com/blog/wp-content/uploads/2021/08/students-smart-response-to-teachers-fb73.png",
+                    "https://www.tiktok.com/api/img/?itemId=7573770993202728206&location=0&aid=1988",
+                    "https://preview.redd.it/the-not-so-glowing-reviews-v0-idsutxif06l91.jpg?width=640&crop=smart&auto=webp&s=47954de89dbb39ce329cae4c71633fce5509568f",
+                    "https://www.boredpanda.com/blog/wp-content/uploads/2023/10/1710066466328871420-png__700.jpg"
+                ]
+            };
+
+            // Xác định level meme
+            let selectedMemeArr = [];
+            if (diem < 6) {
+                selectedMemeArr = memeList.low;
+            } else if (diem < 7) {
+                selectedMemeArr = memeList.lv3;
+            } else if (diem < 8) {
+                selectedMemeArr = memeList.lv4;
+            } else if (diem <= 9) {
+                selectedMemeArr = memeList.lv5;
+            } else {
+                selectedMemeArr = memeList.lv6;
+            }
+
+            // Luôn hiển thị nút nếu có meme (tất cả level đều có)
+            let memeContainer = document.getElementById('meme-container');
+            if (!memeContainer) {
+                memeContainer = document.createElement('div');
+                memeContainer.id = 'meme-container';
+                memeContainer.style.display = 'none';  // Ẩn ban đầu
+                memeContainer.style.marginTop = '20px';
+                memeContainer.style.textAlign = 'center';
+                feedbackDiv.insertAdjacentElement('afterend', memeContainer);
+            }
+
+            let memeButton = document.getElementById('meme-button');
+            if (!memeButton) {
+                memeButton = document.createElement('button');
+                memeButton.id = 'meme-button';
+                memeButton.textContent = 'Xem meme vui 😂';
+                memeButton.style.marginTop = '15px';
+                memeButton.style.padding = '10px 20px';
+                memeButton.style.fontSize = '16px';
+                memeButton.style.background = '#ffeb3b';
+                memeButton.style.border = 'none';
+                memeButton.style.borderRadius = '8px';
+                memeButton.style.cursor = 'pointer';
+                feedbackDiv.insertAdjacentElement('afterend', memeButton);
+
+                memeButton.addEventListener('click', function() {
+                    const randomMeme = selectedMemeArr[Math.floor(Math.random() * selectedMemeArr.length)];
+                    memeContainer.innerHTML = `<img src="${randomMeme}" alt="Meme vui" loading="lazy" class="meme-img">`;
+                    memeContainer.style.display = 'block';
+                    memeButton.style.display = 'none';  // Ẩn nút sau khi bấm
+                });
+            }
+			
+			// HIỆU ỨNG PHÁO HOA (Nếu điểm >= 8)
             if (diem >= 8) {
                 var duration = 3 * 1000;
                 var animationEnd = Date.now() + duration;
@@ -545,3 +628,4 @@
 
 </body>
 </html>
+
