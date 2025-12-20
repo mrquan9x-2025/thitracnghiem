@@ -457,7 +457,7 @@
             // Kho meme (URL trực tiếp, load nhanh, tôi chọn meme vui, tích cực, phù hợp học sinh)
             const memeList = {
                 low: [ // Chỉ 1 meme an ủi cho dưới 6 điểm (lv1 + lv2)
-                    "https://i.etsystatic.com/57374706/r/il/a64e60/7342492873/il_fullxfull.7342492873_djeg.jpg"  // This is Fine dog - hài hước "không sao đâu, cố lên"
+                    "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXE3cWF6Mm91dTRnaHRwa3RlZ2Jwa3czcms1YTdsYjBxOWpvc3M2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tIeCLkB8geYtW/giphy.gif"  // This is Fine dog - hài hước "không sao đâu, cố lên"
                 ],
                 lv3: [ // 6-7 điểm: khá tốt, cố thêm chút
                     "https://cdn.eduadvisor.my/articles/2018/08/Hilarious-Exam-Meme-Charts-07-Things-i-think-during-the-exam.png",
@@ -521,14 +521,14 @@
             if (!memeButton) {
                 memeButton = document.createElement('button');
                 memeButton.id = 'meme-button';
-                memeButton.textContent = 'Xem meme dành cho bạn';
+                memeButton.textContent = 'Xem meme';
 
                 // Style cho nút - quay lại kích thước bạn muốn
                 memeButton.style.marginTop = '15px';
                 memeButton.style.padding = '10px 20px';     // Như bạn yêu cầu
                 memeButton.style.fontSize = '16px';         // Chữ 16px
-                memeButton.style.background = '#3cf0d5';
-                memeButton.style.color = '#000';
+                memeButton.style.background = '#3cf0d5';    // Màu nền xanh ngọc
+                memeButton.style.color = '#333333';         // Màu chữ
                 memeButton.style.border = 'none';
                 memeButton.style.borderRadius = '12px';
                 memeButton.style.cursor = 'pointer';
@@ -672,6 +672,7 @@
 
 </body>
 </html>
+
 
 
 
