@@ -90,25 +90,32 @@
     		font-family: monospace; /* Font chữ kiểu code cho ngầu */
 	}
 /*Đoạn này của meme*/
+	/* Nút hover đẹp hơn */
     #meme-button:hover {
-        background: #6bfaee;
-        transform: scale(1.05);
-        transition: 0.3s;
+        background: #2dd8bc;  /* Tối hơn chút khi hover */
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
     }
+
+    /* Meme responsive hoàn hảo trên mọi thiết bị, đặc biệt mobile */
     .meme-img {
-        max-height: 300px;
-        width: auto;
+        max-width: 100%;     /* Không vượt quá chiều rộng màn hình/container */
+        max-height: 300px;   /* Giữ chiều cao tối đa */
+        height: auto;        /* Tự điều chỉnh tỷ lệ */
+        width: auto;         /* Giữ tỷ lệ gốc */
         border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
         opacity: 0;
         transition: opacity 0.6s ease;
+        display: block;      /* Tránh lỗi inline spacing */
+        margin: 0 auto;      /* Căn giữa chính xác */
     }
-    #meme-container:target .meme-img,  /* Không dùng, chỉ để hỗ trợ */
-    .meme-img {  /* Sau khi load, fade-in tự động bằng JS thêm class nếu muốn, nhưng ở đây dùng onload */
-        opacity: 1 !important;
+
+    /* Đảm bảo không tràn khung nếu có vấn đề overflow */
+    #meme-container {
+        overflow: hidden;    /* Ẩn phần tràn nếu có (an toàn) */
     }
-    /* Để fade-in mượt hơn, thêm onload */
-		
+	
     </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -496,29 +503,34 @@
                 selectedMemeArr = memeList.lv6;
             }
 
-            // Luôn hiển thị nút nếu có meme (tất cả level đều có)
+           // Luôn hiển thị nút nếu có meme (tất cả level đều có)
             let memeContainer = document.getElementById('meme-container');
             if (!memeContainer) {
                 memeContainer = document.createElement('div');
                 memeContainer.id = 'meme-container';
                 memeContainer.style.display = 'none';  // Ẩn ban đầu
                 memeContainer.style.marginTop = '20px';
-                memeContainer.style.textAlign = 'center';
+                memeContainer.style.textAlign = 'center';  // Căn giữa meme
                 feedbackDiv.insertAdjacentElement('afterend', memeContainer);
             }
+
+            // Đảm bảo khu vực nút cũng center (thêm text-align center cho feedbackDiv nếu chưa có)
+            feedbackDiv.style.textAlign = 'center';  // Thêm dòng này để nút và text center
 
             let memeButton = document.getElementById('meme-button');
             if (!memeButton) {
                 memeButton = document.createElement('button');
                 memeButton.id = 'meme-button';
-                memeButton.textContent = 'Xem meme dành cho bạn';
+                memeButton.textContent = 'Xem meme vui 😂';
                 memeButton.style.marginTop = '15px';
-                memeButton.style.padding = '10px 20px';
-                memeButton.style.fontSize = '16px';
-                memeButton.style.background = '#ffeb3b';
+                memeButton.style.padding = '10px 20px';  // To hơn chút cho dễ bấm trên mobile
+                memeButton.style.fontSize = '16px';      // Chữ to hơn trên mobile
+                memeButton.style.background = '#3cf0d5'; // Màu mới xanh ngọc
+                memeButton.style.color = '#000';         // Chữ đen cho nổi
                 memeButton.style.border = 'none';
-                memeButton.style.borderRadius = '8px';
+                memeButton.style.borderRadius = '12px';
                 memeButton.style.cursor = 'pointer';
+                memeButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'; // Đẹp hơn
                 feedbackDiv.insertAdjacentElement('afterend', memeButton);
 
                 memeButton.addEventListener('click', function() {
@@ -526,6 +538,11 @@
                     memeContainer.innerHTML = `<img src="${randomMeme}" alt="Meme vui" loading="lazy" class="meme-img">`;
                     memeContainer.style.display = 'block';
                     memeButton.style.display = 'none';  // Ẩn nút sau khi bấm
+
+                    // Fade-in nhẹ
+                    setTimeout(() => {
+                        memeContainer.querySelector('img').style.opacity = '1';
+                    }, 100);
                 });
             }
 			
@@ -647,6 +664,7 @@
 
 </body>
 </html>
+
 
 
 
