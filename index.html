@@ -89,7 +89,26 @@
     		padding-top: 15px;
     		font-family: monospace; /* Font chữ kiểu code cho ngầu */
 	}
-
+/*Đoạn này của meme*/
+    #meme-button:hover {
+        background: #6bfaee;
+        transform: scale(1.05);
+        transition: 0.3s;
+    }
+    .meme-img {
+        max-height: 300px;
+        width: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+    }
+    #meme-container:target .meme-img,  /* Không dùng, chỉ để hỗ trợ */
+    .meme-img {  /* Sau khi load, fade-in tự động bằng JS thêm class nếu muốn, nhưng ở đây dùng onload */
+        opacity: 1 !important;
+    }
+    /* Để fade-in mượt hơn, thêm onload */
+		
     </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -628,4 +647,5 @@
 
 </body>
 </html>
+
 
