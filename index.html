@@ -454,39 +454,59 @@
             feedbackDiv.innerHTML = `<strong>Lời Thầy nhắn:</strong><br>"${msg}"`;
 
             // --- PHẦN MỚI: HIỂN THỊ MEME VUI ---
-            // Kho meme (URL trực tiếp, load nhanh, tôi chọn meme vui, tích cực, phù hợp học sinh)
+         // Kho meme (URL trực tiếp, load nhanh, tôi chọn meme vui, tích cực, phù hợp học sinh)
             const memeList = {
-                low: [ // Chỉ 1 meme an ủi cho dưới 6 điểm (lv1 + lv2)
-                    "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXE3cWF6Mm91dTRnaHRwa3RlZ2Jwa3czcms1YTdsYjBxOWpvc3M2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tIeCLkB8geYtW/giphy.gif",
-					"https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyanhxbzBja3Zjb3V3em9mM3NzdjhobWFoYnV0MXJlejl4OGpkanc2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IQHTtgvQyHuEi5Epkq/giphy.gif"
+                low: [ // Dưới 6 điểm (lv1 + lv2)
+                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUya3V4NDA5bjJmNjIwaDlla2J0bTM2b3VteWoxYnA2eTdoZDEweDdvZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yoJC2K6rCzwNY2EngA/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycWZuZTdnaWJjYXl1a3I4a2N6YnppanYyY25ucW91Y2Y1bDl3M3A4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/h99SOT2cABIUE/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycDdtZnN6eDI4bWpyanU5MjIxNWh2enNwaXdzaHAzZG1iaW9qa2d4NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2uh5yKKmZjDFUy2DOM/giphy.gif",
+                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyNDdxZnhiamQ1Mm9ycmFuMmNnMG5pZ2xnbHlpemU5NDlmeTl2bm10aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tBWTS5iya1Nkh1uiB9/giphy.gif",
+		   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyOHl3b251ZmtuODBnNWJqajQ5anNoOGNmbHhreTFrajZpYTNzM3BqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6nUQzWnaMz1cDrmo/giphy.gif"
                 ],
                 lv3: [ // 6-7 điểm: khá tốt, cố thêm chút
-                    "https://cdn.eduadvisor.my/articles/2018/08/Hilarious-Exam-Meme-Charts-07-Things-i-think-during-the-exam.png",
-                    "https://external-preview.redd.it/osZHapvJmkLLPmUkA9TP1OC_BEbFV97ESI-0NKr_XvI.jpg?auto=webp&s=964fa4a1ddd3024acd1df37e8547edce8c3d51e4",
-                    "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=1578894622142324",
-                    "https://i.redd.it/llwtnsv0mmo91.jpg",
-                    "https://new.boredteachers.com/wp-content/uploads/2022/01/Toxic-teachers-cover-2.jpg"
+                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyanhxbzBja3Zjb3V3em9mM3NzdjhobWFoYnV0MXJlejl4OGpkanc2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IQHTtgvQyHuEi5Epkq/giphy.gif",
+                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUya3V4NDA5bjJmNjIwaDlla2J0bTM2b3VteWoxYnA2eTdoZDEweDdvZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yoJC2K6rCzwNY2EngA/giphy.gif",
+                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyOHl3b251ZmtuODBnNWJqajQ5anNoOGNmbHhreTFrajZpYTNzM3BqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6nUQzWnaMz1cDrmo/giphy.gif",
+                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMm9uYmVwdmMwbTQyZmNud3EyYmpnNTZ3MnJjdG4yb2RjcXBmZGF1byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Xq3vAx5aX0gaifRAsk/giphy.gif",
+                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyNDdxZnhiamQ1Mm9ycmFuMmNnMG5pZ2xnbHlpemU5NDlmeTl2bm10aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tBWTS5iya1Nkh1uiB9/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyOTdsZXF1c291eW1qczF6OW9nbGxteXEzbXExejcyNnJjN3plZzFkeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FemTGpEZeK27M5fKL4/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyOGd2a3FpOHNrZDM3bmdweHp5enlrMmNyNnp3a252bGZveXNvNDk4ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ca2IQQI3LfR1saF1vf/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycDdtZnN6eDI4bWpyanU5MjIxNWh2enNwaXdzaHAzZG1iaW9qa2d4NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2uh5yKKmZjDFUy2DOM/giphy.gif"
                 ],
                 lv4: [ // 7-8 điểm: rất tốt, success!
-                    "https://www.mostlyblogging.com/wp-content/uploads/2025/06/ChatGPT-Image-Dec-4-2025-06_23_09-AM-700x467.png",  // Success Kid kiểu celebration
-                    "https://www.thesun.co.uk/wp-content/uploads/2022/02/NINTCHDBPICT000706326625.jpg?strip=all&w=712",
-                    "https://external-preview.redd.it/iHF2sPRodufnjzOnHCSD_xAGFa0phSTeIB8UFVY_jDA.jpg?auto=webp&s=f5e5ceb20df740b78745960077d8c2be4bb95570",
-                    "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=10171281177715274",
-                    "https://www.tiktok.com/api/img/?itemId=7549048222145121591&location=0&aid=1988"
+                   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXE3cWF6Mm91dTRnaHRwa3RlZ2Jwa3czcms1YTdsYjBxOWpvc3M2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tIeCLkB8geYtW/giphy.gif",  // Cuu like
+                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMm9uYmVwdmMwbTQyZmNud3EyYmpnNTZ3MnJjdG4yb2RjcXBmZGF1byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Xq3vAx5aX0gaifRAsk/giphy.gif",
+                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUycG85c3ZveDQxbHhqeHNicTBkaXI1aGV1azY4Y3lmemppZ2V4YmZ2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gnNxCUUzGiKuYnLxJN/giphy.gif",
+                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyNDdxZnhiamQ1Mm9ycmFuMmNnMG5pZ2xnbHlpemU5NDlmeTl2bm10aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tBWTS5iya1Nkh1uiB9/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyOTdsZXF1c291eW1qczF6OW9nbGxteXEzbXExejcyNnJjN3plZzFkeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FemTGpEZeK27M5fKL4/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyOGd2a3FpOHNrZDM3bmdweHp5enlrMmNyNnp3a252bGZveXNvNDk4ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ca2IQQI3LfR1saF1vf/giphy.gif",
+                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUycHhtZjdzbWFzZDB2NXZ4MXY3azhycHdoZmkzeGhmNnRxempmOGI3dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wvrn7MMemcOB2/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyY2c3ZWVmNzY3amFmenJrNGg4NGoycTkwcHUzb3A0dmxjZGxhbnEzMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PhR99fbNjhAAzopGnm/giphy.gif",
+                   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXV0c3VwendhMmJ5ajZpcDV0MHY5ZWUyYW5qMHM0a3V3N2w4cm1rMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tnMUXTkYUWKe1dasNJ/giphy.gif"
                 ],
                 lv5: [ // 8-9 điểm: giỏi lắm, smart!
-                    "https://file.aiquickdraw.com/tool-page/section-images/1755510614473utuxcrk5.webp",  // Spongebob rainbow kiểu "imagination/smart"
-                    "https://bylo.ai/cdn-cgi/image/width=600,height=400,fit=scale-down,quality=85,format=webp/https://file.aiquickdraw.com/tool-page/section-images/1755509897072grkvlinq.webp",
-                    "https://preview.redd.it/whats-the-best-spongebob-meme-ever-v0-bw1b0nmho38f1.jpeg?width=640&crop=smart&auto=webp&s=43c0fdfd8b3dbac8f054d9d4f9e34d14224a8472",
-                    "https://davidwilliamrosales.com/wp-content/uploads/2022/06/screen-shot-2022-06-26-at-4.02.45-pm.png",
-                    "https://cdn-useast1.kapwing.com/static/templates/spongebob-and-patrick-feeding-squidward-fruit-meme-template-regular-df7a6bf1.webp"
+                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUycG85c3ZveDQxbHhqeHNicTBkaXI1aGV1azY4Y3lmemppZ2V4YmZ2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gnNxCUUzGiKuYnLxJN/giphy.gif",
+                   "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2t3MjAxODMwMTFoYnZoN3MyamlyNHFocTVvM2lzMDMxNjhxbGtsciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3NtY188QaxDdC/giphy.gif",
+                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyancxNHF6ZnpkdWZlajdjYTh2d2xiczk2cXR4NTV3NnV3YnJzeHpuYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Swx36wwSsU49HAnIhC/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNGF2djhjdGFsZmllYzFpYWFsZnc2NHEweTk2dTFtNTl1ZTY4bzlndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/50YgxbPnjA1LG/giphy.gif",
+                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyNnVvZncxZ2hocmExZnRjbDc5YTB4aDk4b2tlZGpnYTVtem84aTgxOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/s54cTulj6JbU0GOGg4/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZWNocjdjbWp4bmRlaXczNGE3ZXNmNTdrdXh3MzJxYzhpbGppN25keiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Only6nbYqnhVcIaHO7/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZWNocDNidG4wZGt3N201Y25rbHVyazNmbm9tNHNsdW4zNnBjeXlndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AlQwFJLmBwVrJ2DFn3/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyY2c3ZWVmNzY3amFmenJrNGg4NGoycTkwcHUzb3A0dmxjZGxhbnEzMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PhR99fbNjhAAzopGnm/giphy.gif",
+                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyMnk4NnAwc2JnZGNkd3F4NmV0eDIyYTYwZWY4eXdzb3NwMzVtMnl5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUjSOWCndCdECCyOEY/giphy.gif",
+                   "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE2c2x5OGpoam5wMHMzbGh0bHNuZTY1eHc2ajVqZTIzOXhsNnEzeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qAmdxxyQ4XTt3KGt3c/giphy.gif"
                 ],
                 lv6: [ // Trên 9 điểm: đỉnh chóp, epic win!
-                    "https://i.redd.it/jxf8utgw2r9e1.jpeg",
-                    "https://static.boredpanda.com/blog/wp-content/uploads/2021/08/students-smart-response-to-teachers-fb73.png",
-                    "https://www.tiktok.com/api/img/?itemId=7573770993202728206&location=0&aid=1988",
-                    "https://preview.redd.it/the-not-so-glowing-reviews-v0-idsutxif06l91.jpg?width=640&crop=smart&auto=webp&s=47954de89dbb39ce329cae4c71633fce5509568f",
-                    "https://www.boredpanda.com/blog/wp-content/uploads/2023/10/1710066466328871420-png__700.jpg"
+                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUycG85c3ZveDQxbHhqeHNicTBkaXI1aGV1azY4Y3lmemppZ2V4YmZ2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gnNxCUUzGiKuYnLxJN/giphy.gif",
+                   "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2t3MjAxODMwMTFoYnZoN3MyamlyNHFocTVvM2lzMDMxNjhxbGtsciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3NtY188QaxDdC/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNGF2djhjdGFsZmllYzFpYWFsZnc2NHEweTk2dTFtNTl1ZTY4bzlndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/50YgxbPnjA1LG/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyaWwzcTJoNWM0MHJrc2hobWN4ZHlpbW5pNjJkcGh1b3dkMTdpeWNmMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/nbvFVPiEiJH6JOGIok/giphy.gif",
+                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyMnk4NnAwc2JnZGNkd3F4NmV0eDIyYTYwZWY4eXdzb3NwMzVtMnl5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUjSOWCndCdECCyOEY/giphy.gif",
+                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyc2IyNnBuMms2OXlwMTZuejY2YjY0b2ZqM2lwM3Ixc2p6eGxueGYxdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cdXpgeB32BekIGzBNh/giphy.gif",
+                   "https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyMmwzcHY3am03eGRlaTQzbXNua2drbTdpZmVtaDFyODBjejlmeWZ0eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bb1PFnM9zHnR3Ns3tG/giphy.gif",
+                   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXV0c3VwendhMmJ5ajZpcDV0MHY5ZWUyYW5qMHM0a3V3N2w4cm1rMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tnMUXTkYUWKe1dasNJ/giphy.gif",
+                   "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzVvOHVoc3FocHlrcGppdTJpcGxpZ3Q3ZjFkdm5ycXU5Y2dpdDI2MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KhdCldraGlzwqTc4Vb/giphy.gif",
+                   "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpzNXp2ZjIxZzliOWNrOXpkdHR2NzZoNHZwOGQ0Y3I5eG13OXBrcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/r1d69SdEpcxmhzlHd1/giphy.gif"
                 ]
             };
 
@@ -520,33 +540,60 @@
 
             let memeButton = document.getElementById('meme-button');
             if (!memeButton) {
+                // Tạo container cho nút để dễ căn giữa và thêm text
+                let buttonWrapper = document.createElement('div');
+                buttonWrapper.style.marginTop = '25px';
+                buttonWrapper.style.textAlign = 'center';
+
+                // Nút chính (vuông với hộp quà)
                 memeButton = document.createElement('button');
                 memeButton.id = 'meme-button';
-                memeButton.textContent = 'Xem meme';
+                memeButton.innerHTML = '🎁';  // Chỉ emoji hộp quà ở giữa
 
-                // Style cho nút - quay lại kích thước bạn muốn
-                memeButton.style.marginTop = '15px';
-                memeButton.style.padding = '10px 20px';     // Như bạn yêu cầu
-                memeButton.style.fontSize = '16px';         // Chữ 16px
-                memeButton.style.background = '#3cf0d5';    // Màu nền xanh ngọc
-                memeButton.style.color = '#333333';         // Màu chữ
+                // Style nút vuông đẹp
+                memeButton.style.width = '90px';
+                memeButton.style.height = '90px';
+                memeButton.style.fontSize = '50px';         // 🎁 to đẹp
+                memeButton.style.background = '#ff6b6b';     // Đỏ hồng như quà
+                memeButton.style.color = '#fff';
                 memeButton.style.border = 'none';
-                memeButton.style.borderRadius = '12px';
+                memeButton.style.borderRadius = '18px';      // Bo tròn nhẹ
                 memeButton.style.cursor = 'pointer';
-                memeButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-                
-                // QUAN TRỌNG: Các style để căn giữa hoàn hảo
-                memeButton.style.display = 'block';         // Đổi thành block để margin auto hoạt động
-                memeButton.style.marginLeft = 'auto';       // Căn giữa ngang
-                memeButton.style.marginRight = 'auto';      // Căn giữa ngang
+                memeButton.style.boxShadow = '0 8px 20px rgba(255,107,107,0.4)';
+                memeButton.style.transition = 'all 0.3s ease';
+                memeButton.style.display = 'block';
+                memeButton.style.margin = '0 auto 12px auto';  // Căn giữa + khoảng cách dưới
 
-                feedbackDiv.insertAdjacentElement('afterend', memeButton);
+                // Thêm vào wrapper
+                buttonWrapper.appendChild(memeButton);
+                buttonWrapper.appendChild(buttonText);
 
+                // Chèn vào giao diện
+                feedbackDiv.insertAdjacentElement('afterend', buttonWrapper);
+
+                // Hiệu ứng khi hover/tap
+                memeButton.addEventListener('mouseenter', () => {
+                    memeButton.style.transform = 'scale(1.1)';
+                    memeButton.style.boxShadow = '0 12px 30px rgba(255,107,107,0.6)';
+                });
+                memeButton.addEventListener('mouseleave', () => {
+                    memeButton.style.transform = 'scale(1)';
+                    memeButton.style.boxShadow = '0 8px 20px rgba(255,107,107,0.4)';
+                });
+                // Cho mobile: hiệu ứng press
+                memeButton.addEventListener('touchstart', () => {
+                    memeButton.style.transform = 'scale(0.95)';
+                });
+                memeButton.addEventListener('touchend', () => {
+                    memeButton.style.transform = 'scale(1.1)';
+                });
+
+                // Sự kiện bấm nút
                 memeButton.addEventListener('click', function() {
                     const randomMeme = selectedMemeArr[Math.floor(Math.random() * selectedMemeArr.length)];
                     memeContainer.innerHTML = `<img src="${randomMeme}" alt="Meme vui" loading="lazy" class="meme-img">`;
                     memeContainer.style.display = 'block';
-                    memeButton.style.display = 'none';
+                    buttonWrapper.style.display = 'none';  // Ẩn cả nút + text sau khi bấm
 
                     setTimeout(() => {
                         const img = memeContainer.querySelector('img');
@@ -673,6 +720,7 @@
 
 </body>
 </html>
+
 
 
 
