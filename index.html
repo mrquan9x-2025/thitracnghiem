@@ -461,7 +461,7 @@
                    "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycWZuZTdnaWJjYXl1a3I4a2N6YnppanYyY25ucW91Y2Y1bDl3M3A4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/h99SOT2cABIUE/giphy.gif",
                    "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycDdtZnN6eDI4bWpyanU5MjIxNWh2enNwaXdzaHAzZG1iaW9qa2d4NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2uh5yKKmZjDFUy2DOM/giphy.gif",
                    "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyNDdxZnhiamQ1Mm9ycmFuMmNnMG5pZ2xnbHlpemU5NDlmeTl2bm10aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tBWTS5iya1Nkh1uiB9/giphy.gif",
-		   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyOHl3b251ZmtuODBnNWJqajQ5anNoOGNmbHhreTFrajZpYTNzM3BqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6nUQzWnaMz1cDrmo/giphy.gif"
+		            "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyOHl3b251ZmtuODBnNWJqajQ5anNoOGNmbHhreTFrajZpYTNzM3BqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6nUQzWnaMz1cDrmo/giphy.gif"
                 ],
                 lv3: [ // 6-7 điểm: khá tốt, cố thêm chút
                    "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyanhxbzBja3Zjb3V3em9mM3NzdjhobWFoYnV0MXJlejl4OGpkanc2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IQHTtgvQyHuEi5Epkq/giphy.gif",
@@ -540,60 +540,33 @@
 
             let memeButton = document.getElementById('meme-button');
             if (!memeButton) {
-                // Tạo container cho nút để dễ căn giữa và thêm text
-                let buttonWrapper = document.createElement('div');
-                buttonWrapper.style.marginTop = '25px';
-                buttonWrapper.style.textAlign = 'center';
-
-                // Nút chính (vuông với hộp quà)
                 memeButton = document.createElement('button');
                 memeButton.id = 'meme-button';
-                memeButton.innerHTML = '🎁';  // Chỉ emoji hộp quà ở giữa
+                memeButton.textContent = '🎁';
 
-                // Style nút vuông đẹp
-                memeButton.style.width = '90px';
-                memeButton.style.height = '90px';
-                memeButton.style.fontSize = '50px';         // 🎁 to đẹp
-                memeButton.style.background = '#ff6b6b';     // Đỏ hồng như quà
-                memeButton.style.color = '#fff';
+                // Style cho nút - quay lại kích thước bạn muốn
+                memeButton.style.marginTop = '15px';
+                memeButton.style.padding = '40px 40px';     // Như bạn yêu cầu
+                memeButton.style.fontSize = '35px';         // Chữ 16px
+                memeButton.style.background = '#3cf0d5';    // Màu nền xanh ngọc
+                memeButton.style.color = '#333333';         // Màu chữ
                 memeButton.style.border = 'none';
-                memeButton.style.borderRadius = '18px';      // Bo tròn nhẹ
+                memeButton.style.borderRadius = '12px';
                 memeButton.style.cursor = 'pointer';
-                memeButton.style.boxShadow = '0 8px 20px rgba(255,107,107,0.4)';
-                memeButton.style.transition = 'all 0.3s ease';
-                memeButton.style.display = 'block';
-                memeButton.style.margin = '0 auto 12px auto';  // Căn giữa + khoảng cách dưới
+                memeButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+                
+                // QUAN TRỌNG: Các style để căn giữa hoàn hảo
+                memeButton.style.display = 'block';         // Đổi thành block để margin auto hoạt động
+                memeButton.style.marginLeft = 'auto';       // Căn giữa ngang
+                memeButton.style.marginRight = 'auto';      // Căn giữa ngang
 
-                // Thêm vào wrapper
-                buttonWrapper.appendChild(memeButton);
-                buttonWrapper.appendChild(buttonText);
+                feedbackDiv.insertAdjacentElement('afterend', memeButton);
 
-                // Chèn vào giao diện
-                feedbackDiv.insertAdjacentElement('afterend', buttonWrapper);
-
-                // Hiệu ứng khi hover/tap
-                memeButton.addEventListener('mouseenter', () => {
-                    memeButton.style.transform = 'scale(1.1)';
-                    memeButton.style.boxShadow = '0 12px 30px rgba(255,107,107,0.6)';
-                });
-                memeButton.addEventListener('mouseleave', () => {
-                    memeButton.style.transform = 'scale(1)';
-                    memeButton.style.boxShadow = '0 8px 20px rgba(255,107,107,0.4)';
-                });
-                // Cho mobile: hiệu ứng press
-                memeButton.addEventListener('touchstart', () => {
-                    memeButton.style.transform = 'scale(0.95)';
-                });
-                memeButton.addEventListener('touchend', () => {
-                    memeButton.style.transform = 'scale(1.1)';
-                });
-
-                // Sự kiện bấm nút
                 memeButton.addEventListener('click', function() {
                     const randomMeme = selectedMemeArr[Math.floor(Math.random() * selectedMemeArr.length)];
                     memeContainer.innerHTML = `<img src="${randomMeme}" alt="Meme vui" loading="lazy" class="meme-img">`;
                     memeContainer.style.display = 'block';
-                    buttonWrapper.style.display = 'none';  // Ẩn cả nút + text sau khi bấm
+                    memeButton.style.display = 'none';
 
                     setTimeout(() => {
                         const img = memeContainer.querySelector('img');
@@ -720,11 +693,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
