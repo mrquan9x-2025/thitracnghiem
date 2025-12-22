@@ -130,16 +130,19 @@
     animation: fadeIn 0.3s ease;
 }
 
+/* 1. Sửa lại khung chứa nội dung */
 .modal-content {
     background: white;
-    padding: 30px;
-    border-radius: 20px; /* Bo góc cực đẹp */
+    padding: 20px; /* Giảm padding một chút để tiết kiệm không gian */
+    border-radius: 20px;
     width: 90%;
     max-width: 450px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3); /* Đổ bóng sâu */
-    text-align: center;
-    position: relative;
-    transform: translateY(0);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    
+    /* THÊM 3 DÒNG NÀY */
+    max-height: 85vh;    /* Giới hạn chiều cao tối đa bằng 85% màn hình */
+    display: flex;       /* Chuyển sang dạng flex để sắp xếp các phần bên trong */
+    flex-direction: column; 
 }
 
 .modal-header {
@@ -149,12 +152,26 @@
     color: #2c3e50;
 }
 
+/* 2. Sửa lại phần chứa chữ (phần này sẽ có thanh cuộn) */
 .modal-body {
     text-align: left;
     line-height: 1.6;
-    color: #555;
-    margin-bottom: 25px;
+    color: #444;
+    margin-bottom: 20px;
+
+    /* THÊM 2 DÒNG NÀY */
+    overflow-y: auto;    /* Hiện thanh cuộn dọc khi nội dung quá dài */
+    padding-right: 10px; /* Tạo khoảng trống để thanh cuộn không đè lên chữ */
 }
+/* Tùy chỉnh thanh cuộn cho Popup */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: #52cca1; /* Màu xanh của bạn */
+    border-radius: 10px;
+}
+
 
 .btn-close {
     background: #3498db;
@@ -211,7 +228,7 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN 832</h1>
+        <h1 class="brand-title">TOÁN THẦY QUÂN 842</h1>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
