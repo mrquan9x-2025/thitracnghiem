@@ -144,7 +144,7 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN 1222</h1>
+        <h1 class="brand-title">TOÁN THẦY QUÂN 242</h1>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
@@ -433,12 +433,12 @@
 
            // Ngân hàng lời nhắn
             const msgList = {
-                lv1: ["Vạn sự khởi đầu nan 🌱, đừng nản chí {ten} nhé! 💪", "Thất bại là mẹ thành công 🐣, cố lên {ten} ơi! 🚀", "Cần ôn kỹ lại lý thuyết nha {ten} 📚, em sẽ tiến bộ nhanh thôi! 💪", "Đừng buồn nhé {ten} 🤗, lần sau chắc chắn sẽ tốt hơn nhiều! 🌈", "Cố gắng hơn chút nữa nhé {ten} 💪, mỗi lần thử là một bước tiến rồi! 🏃", "{ten} ơi, điểm lần này giống Einstein lúc nhỏ lắm 😄, ông ấy từng bị cho là “chậm hiểu” mà sau thay đổi cả thế giới! ⚛️", "Nobita cũng hay được điểm kiểu này nè {ten} à 😂, nhưng cậu ấy vẫn có bạn bè và thầy cô giúp, em cũng thế! 💪"],
-                lv2: ["Đã có cố gắng 👍, nhưng cần tập trung hơn nha {ten} ⚡", "Cẩn thận hơn chút nữa nhé {ten} 📝, phong độ sẽ lên nhanh thôi 😉", "Cẩn thận hơn xíu nữa là điểm cao ngay thôi {ten} ơi 🎯", "Ôn luyện bài tập cơ bản nhiều hơn nhé {ten} 📚", "Tiếp tục nỗ lực nhé {ten} 💪, sắp chạm mốc Khá rồi 🌻", "{ten} ơi, điểm lần này giống Einstein lúc nhỏ lắm 😄, ông ấy từng bị cho là “chậm hiểu” mà sau thay đổi cả thế giới! ⚛️", "Nobita cũng hay được điểm kiểu này nè {ten} à 😂, nhưng cậu ấy vẫn có bạn bè và thầy cô giúp, em cũng thế! 💪"],
-                lv3: ["Kết quả khá đó 👏, phát huy và cố gắng lên nhé {ten}! 😉", "Nền tảng khá ổn rồi 👏, {ten} cố gắng luyện đề nhiều hơn nha 🔥", "Sắp giỏi rồi 🌟, cố thêm chút nữa nào {ten} 🚴", "Điểm này cho thấy {ten} đã nắm được kiến thức cơ bản 👍. Tiếp tục cố gắng nhé! 🌈", "Khá ổn đó {ten} 😎, lần sau mục tiêu 8+ nhé! 💪", "{ten} à, Steve Jobs thời cấp ba cũng chỉ ở mức này 🙌, rồi tạo ra Apple thay đổi thế giới! 🍎", "{ten} ơi, J.K. Rowling từng bị từ chối nhiều lần 😊, nhưng vẫn viết nên Harry Potter bán hàng tỷ cuốn! 📚"],
-                lv4: ["Kết quả ổn đó 👏, chúc mừng {ten} vì sự tiến bộ này! 🎉", "Rất đáng khen 👏, {ten} giữ vững phong độ nhé 😉", "Điểm số đẹp 🌟, chúc mừng {ten}! Tiếp tục phát huy nhé! 🚀", "{ten} ơi, chỉ cần cẩn thận chút xíu nữa là chạm mốc cao hơn rồi! 🔥", "{ten} đang học rất hiệu quả 🔥, cố gắng giữ nhịp này nha! 😎", "Giống Albert Einstein thời trung học lắm {ten} à 👓, ông ấy khá thôi nhưng thành huyền thoại rồi! 🧠", "{ten} ơi, điểm cao giống Leonardo da Vinci thời trẻ luôn á 🎨, ông ấy vừa học vừa sáng tạo siêu đỉnh!"],
-                lv5: ["Một bài làm chất lượng cao 🌟, tiếp tục giữ phong độ nhé {ten}! 🚀", "Kiến thức của {ten} khá vững rồi 🌈, chúc mừng em! 👏", "Chỉ thiếu chút xíu nữa là điểm tuyệt đối rồi {ten} ơi 🤩", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 👏", "Phong độ đỉnh chóp 👍, tiếp tục thế này nhé {ten}! 🌟", "Điểm đẹp như thời Stephen Hawking học đại học {ten} ơi 🌠, ông ấy giỏi và truyền cảm hứng cho cả thế giới!", "{ten} à, Marie Curie cũng ở mức này trước khi đoạt Nobel 🙆‍️, xuất sắc lắm! 🏆"],
-                lv6: ["ĐỈNH CHÓP! 💯 {ten} là niềm tự hào của cả lớp! 😍", "Quá xịn rồi {ten} 🎉, đúng chuẩn học sinh gương mẫu! 👍", "Đỉnh của chóp! 👍 Chúc mừng {ten} nhé 🎉", "Kết quả rất ấn tượng 🤩, 10 điểm tròn trịa cho sự nỗ lực của {ten} 🎉", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 🎉", "{ten} ơi, điểm cao đúng chuẩn “Elon Musk thời đi học” luôn 🚀, em đang chinh phục cả vũ trụ kiến thức rồi! 🌌", "Mức điểm này như của Bill Gates sáng lập Microsoft {ten} ơi 💰, tiếp tục phát huy nhé! ✨"]
+                lv1: ["Vạn sự khởi đầu nan 🌱, đừng nản chí {ten} nhé! 💪", "Thất bại là mẹ thành công 🐣, cố lên {ten} ơi! 🚀", "Cần ôn kỹ lại lý thuyết nha {ten} 📚, em sẽ tiến bộ nhanh thôi! 💪", "Đừng buồn nhé {ten} 🤗, lần sau chắc chắn sẽ tốt hơn nhiều! 🌈", "Cố gắng hơn chút nữa nhé {ten} 💪, mỗi lần thử là một bước tiến rồi! 🏃", "{ten} ơi, điểm lần này giống Einstein lúc nhỏ lắm 😄, ông ấy từng bị cho là “chậm hiểu” mà sau thay đổi cả thế giới! Cố lên nhé!️", "Nobita cũng hay được điểm kiểu này nè {ten} à 😂, nhưng cậu ấy vẫn có bạn bè và thầy cô giúp, em cũng thế. Cố lên nhé!️💪"],
+                lv2: ["Đã có cố gắng 👍, nhưng cần tập trung hơn nha {ten} ⚡", "Cẩn thận hơn chút nữa nhé {ten} 📝, phong độ sẽ lên nhanh thôi 😉", "Cẩn thận hơn xíu nữa là điểm cao ngay thôi {ten} ơi 🎯", "Ôn luyện bài tập cơ bản nhiều hơn nhé {ten} 📚", "Tiếp tục nỗ lực nhé {ten} 💪, sắp chạm mốc Khá rồi 🌻", "{ten} ơi, điểm lần này giống Einstein lúc nhỏ lắm 😄, ông ấy từng bị cho là “chậm hiểu” mà sau thay đổi cả thế giới! Cố lên nhé!️", "Nobita cũng hay được điểm kiểu này nè {ten} à 😂, nhưng cậu ấy vẫn có bạn bè và thầy cô giúp, em cũng thế. Cố lên nhé!️ 💪"],
+                lv3: ["Kết quả khá đó 👏, phát huy và cố gắng lên nhé {ten}! 😉", "Nền tảng khá ổn rồi 👏, {ten} cố gắng luyện đề nhiều hơn nha 🔥", "Sắp giỏi rồi 🌟, cố thêm chút nữa nào {ten} 🚴", "Điểm này cho thấy {ten} đã nắm được kiến thức cơ bản 👍. Tiếp tục cố gắng nhé! 🌈", "Khá ổn đó {ten} 😎, lần sau mục tiêu 8+ nhé! 💪", "{ten} à, Steve Jobs thời cấp ba cũng chỉ ở mức này 🙌, rồi tạo ra 🍎 Apple thay đổi thế giới! Cố lên nhé!️", "{ten} ơi, J.K. Rowling từng bị từ chối nhiều lần 😊, nhưng vẫn viết nên 📚 Harry Potter bán hàng tỷ cuốn! Cố lên nhé!️"],
+                lv4: ["Kết quả ổn đó 👏, chúc mừng {ten} vì sự tiến bộ này! 🎉", "Rất đáng khen 👏, {ten} giữ vững phong độ nhé 😉", "Điểm số đẹp 🌟, chúc mừng {ten}! Tiếp tục phát huy nhé! 🚀", "{ten} ơi, chỉ cần cẩn thận chút xíu nữa là chạm mốc cao hơn rồi! 🔥", "{ten} đang học rất hiệu quả 🔥, cố gắng giữ nhịp này nha! 😎", "Giống Albert Einstein thời trung học lắm {ten} à 👓, ông ấy học khá thôi nhưng thành huyền thoại rồi! Cố lên nhé!️", "{ten} ơi, điểm cao giống Leonardo da Vinci thời trẻ luôn á 🎨 Cố lên nhé!️"],
+                lv5: ["Một bài làm chất lượng cao 🌟, tiếp tục giữ phong độ nhé {ten}! 🚀", "Kiến thức của {ten} khá vững rồi 🌈, chúc mừng em! 👏", "Chỉ thiếu chút xíu nữa là điểm tuyệt đối rồi {ten} ơi 🤩", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 👏", "Phong độ đỉnh chóp 👍, tiếp tục thế này nhé {ten}! 🌟", "Điểm đẹp như thời Stephen Hawking học đại học {ten} ơi 🌠, ông ấy giỏi và truyền cảm hứng cho cả thế giới!", "{ten} à, Marie Curie cũng ở mức này trước khi đoạt Nobel 🙆‍️, tiếp tục phát huy nhé! 🏆"],
+                lv6: ["ĐỈNH CHÓP! 💯 {ten} là niềm tự hào của cả lớp! 😍", "Quá xịn rồi {ten} 🎉, đúng chuẩn học sinh gương mẫu! 👍", "Đỉnh của chóp! 👍 Chúc mừng {ten} nhé 🎉", "Kết quả rất ấn tượng 🤩, 10 điểm tròn trịa cho sự nỗ lực của {ten} 🎉", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 🎉", "Điểm cao đúng chuẩn “Elon Musk thời đi học” luôn 🚀, hãy tiếp tục chinh phục vũ trụ kiến thức {ten} nhé! 🌌", "Mức điểm này như của Bill Gates sáng lập Microsoft {ten} ơi 💰, tiếp tục phát huy nhé! ✨"]
             };
 
             // Chọn nhóm lời nhắn
@@ -656,6 +656,7 @@
                 html += `</div>`;
             });
             document.getElementById('result-details').innerHTML = html;
+			window.scrollTo(0, 0);
 
         } catch(e) { 
             alert("Lỗi nộp bài! Vui lòng kiểm tra mạng."); 
@@ -760,7 +761,7 @@
             `;
             
             msgDiv.innerHTML = `
-                <div style="font-weight: bold; font-size: 0.98em; margin-bottom: 8px;">
+                <div style="font-size: 0.98em; margin-bottom: 8px;">
                     Mỗi câu trả lời chưa đúng là một cơ hội để các em hiểu sâu hơn vấn đề. 
                     Đừng sợ sai, quan trọng là học được gì từ lỗi sai đó để vững vàng hơn.
                 </div>
@@ -913,4 +914,3 @@
 
 </body>
 </html>
-
