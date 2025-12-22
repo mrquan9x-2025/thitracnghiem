@@ -144,7 +144,7 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN 347</h1>
+        <h1 class="brand-title">TOÁN THẦY QUÂN 401</h1>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
@@ -216,7 +216,7 @@
         </div>
         <textarea id="exam-data-input" rows="8" placeholder="Dán đáp án vào đây..."></textarea>
         
-        <button class="btn" onclick="luuDeThi()">Lưu Đề Thi</button>
+        <button class="btn" onclick="luuDeThi(event)">Lưu Đề Thi</button>
         <button class="btn btn-outline" onclick="location.reload()">Thoát</button>
     </div>
 
@@ -689,56 +689,84 @@
         else { alert(res.msg); }
     }
 
-    async function luuDeThi() {
-        const ma = document.getElementById('new-exam-code').value.trim();
-        const ten = document.getElementById('new-exam-name').value.trim();
-        const cfg = {
-            p1_num: parseInt(document.getElementById('cfg-p1-num').value) || 0,
-            p1_score: parseFloat(document.getElementById('cfg-p1-score').value) || 0,
-            p2_num: parseInt(document.getElementById('cfg-p2-num').value) || 0,
-            p2_mode: document.getElementById('cfg-p2-mode').value,
-            p3_num: parseInt(document.getElementById('cfg-p3-num').value) || 0,
-            p3_score: parseFloat(document.getElementById('cfg-p3-score').value) || 0
-        };
-        const raw = document.getElementById('exam-data-input').value;
-        if(!ma || !ten || !raw) return alert("Vui lòng nhập đủ thông tin!");
+    async function luuDeThi(event) {
+    // 1. LẤY ĐỐI TƯỢNG NÚT VÀ LƯU TRẠNG THÁI CŨ
+    const btn = event.target; 
+    const originalText = btn.innerHTML;
 
-        let lines = raw.split('\n').filter(l => l.trim() !== "");
-        let dapAn = [];
-        let totalQ = cfg.p1_num + cfg.p2_num + cfg.p3_num;
-        let currentLine = 0;
-        
-        function parseLine(line) { let dot = line.indexOf('.'); return dot === -1 ? line.trim() : line.substring(dot+1).trim(); }
+    // 2. THU THẬP DỮ LIỆU (Giữ nguyên logic của bạn)
+    const ma = document.getElementById('new-exam-code').value.trim();
+    const ten = document.getElementById('new-exam-name').value.trim();
+    const cfg = {
+        p1_num: parseInt(document.getElementById('cfg-p1-num').value) || 0,
+        p1_score: parseFloat(document.getElementById('cfg-p1-score').value) || 0,
+        p2_num: parseInt(document.getElementById('cfg-p2-num').value) || 0,
+        p2_mode: document.getElementById('cfg-p2-mode').value,
+        p3_num: parseInt(document.getElementById('cfg-p3-num').value) || 0,
+        p3_score: parseFloat(document.getElementById('cfg-p3-score').value) || 0
+    };
+    const raw = document.getElementById('exam-data-input').value;
 
-        for(let i=0; i<cfg.p1_num; i++) {
-            if(currentLine >= lines.length) break;
-            dapAn.push({id: i+1, dang: 1, dapAn: parseLine(lines[currentLine++]).toUpperCase()});
-        }
-        for(let i=0; i<cfg.p2_num; i++) {
-            if(currentLine >= lines.length) break;
-            let arr = parseLine(lines[currentLine++]).split('').map(c => c.toUpperCase() === 'Đ');
-            dapAn.push({id: dapAn.length+1, dang: 2, dapAn: arr, soY: 4});
-        }
-        for(let i=0; i<cfg.p3_num; i++) {
-            if(currentLine >= lines.length) break;
-            dapAn.push({id: dapAn.length+1, dang: 3, dapAn: parseFloat(parseLine(lines[currentLine++]).replace(',', '.'))});
-        }
+    // Kiểm tra đầu vào
+    if(!ma || !ten || !raw) return alert("Vui lòng nhập đủ thông tin!");
 
-        if (dapAn.length !== totalQ) {
-            if(!confirm(`Cấu hình ${totalQ} câu nhưng đọc được ${dapAn.length} dòng. Lưu không?`)) return;
-        }
-
-        const payload = { maDe: ma, tenDe: ten, dapAn: dapAn, config: cfg };
-        const formData = new FormData();
-        formData.append('action', 'save_exam');
-        formData.append('data', JSON.stringify(payload));
-        
-        showLoader(true);
-		window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn lên đầu để xem loader
-        await fetch(API_URL, { method: 'POST', body: formData });
-        alert("Lưu thành công! Bạn có thể tắt trang hoặc tạo đề khác.");
-        showLoader(false);
+    // Xử lý tách dòng đáp án
+    let lines = raw.split('\n').filter(l => l.trim() !== "");
+    let dapAn = [];
+    let totalQ = cfg.p1_num + cfg.p2_num + cfg.p3_num;
+    let currentLine = 0;
+    
+    function parseLine(line) { 
+        let dot = line.indexOf('.'); 
+        return dot === -1 ? line.trim() : line.substring(dot+1).trim(); 
     }
+
+    for(let i=0; i<cfg.p1_num; i++) {
+        if(currentLine >= lines.length) break;
+        dapAn.push({id: i+1, dang: 1, dapAn: parseLine(lines[currentLine++]).toUpperCase()});
+    }
+    for(let i=0; i<cfg.p2_num; i++) {
+        if(currentLine >= lines.length) break;
+        let arr = parseLine(lines[currentLine++]).split('').map(c => c.toUpperCase() === 'Đ');
+        dapAn.push({id: dapAn.length+1, dang: 2, dapAn: arr, soY: 4});
+    }
+    for(let i=0; i<cfg.p3_num; i++) {
+        if(currentLine >= lines.length) break;
+        dapAn.push({id: dapAn.length+1, dang: 3, dapAn: parseFloat(parseLine(lines[currentLine++]).replace(',', '.'))});
+    }
+
+    if (dapAn.length !== totalQ) {
+        if(!confirm(`Cấu hình ${totalQ} câu nhưng đọc được ${dapAn.length} dòng. Lưu không?`)) return;
+    }
+
+    // 3. BẮT ĐẦU QUÁ TRÌNH GỬI DỮ LIỆU
+    const payload = { maDe: ma, tenDe: ten, dapAn: dapAn, config: cfg };
+    const formData = new FormData();
+    formData.append('action', 'save_exam');
+    formData.append('data', JSON.stringify(payload));
+
+    // ĐỔI GIAO DIỆN NÚT THÀNH LOADING (Thay cho showLoader hệ thống)
+    btn.disabled = true;
+    btn.innerHTML = '<div class="btn-loader"></div> Đang lưu...';
+
+    try {
+        const response = await fetch(API_URL, { method: 'POST', body: formData });
+        const result = await response.json(); // Giả sử API trả về JSON
+
+        if(result.status === 'success' || response.ok) {
+            alert("Lưu thành công! Bạn có thể tắt trang hoặc tạo đề khác.!");
+        } else {
+            alert("Có lỗi xảy ra: " + (result.msg || "Không xác định"));
+        }
+    } catch(e) {
+        console.error(e);
+        alert("Lỗi kết nối mạng hoặc máy chủ!");
+    } finally {
+        // 4. TRẢ LẠI NÚT TRẠNG THÁI BAN ĐẦU (Dù thành công hay thất bại)
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
 
 // --- CẤU HÌNH SỬA SAI ---
     const MAX_LAN_THU = 2; // Thầy đổi số này nếu muốn tăng/giảm số lượt
