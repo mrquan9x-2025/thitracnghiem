@@ -144,7 +144,7 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN 1041</h1>
+        <h1 class="brand-title">TOÁN THẦY QUÂN 1121</h1>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
@@ -223,7 +223,7 @@
         <h2>KẾT QUẢ: <span id="score-display" style="color:red; font-size: 2em"></span></h2>
         <div id="result-details"></div>
         <button id="btn-fix-mistakes" class="btn" style="background-color: #f39c12; margin-bottom: 10px; display: none;" onclick="cheDoSuaSai()">
-            🛠️ Sửa chữa sai lầm
+            Sửa sai - Grow Your Mind
         </button>
 		<button class="btn" onclick="location.reload()">Làm đề khác</button>
     </div>
@@ -755,8 +755,8 @@
             
             msgDiv.innerHTML = `
                 <div style="font-weight: bold; font-size: 0.98em; margin-bottom: 8px;">
-                    Mỗi câu trả lời chưa đúng là một cơ hội để các em hiểu sâu hơn vấn đề. <br>
-                    Đừng sợ sai, quan trọng là chúng ta đã học được gì từ lỗi sai đó để vững vàng hơn.
+                    Mỗi câu trả lời chưa đúng là một cơ hội để các em hiểu sâu hơn vấn đề. 
+                    Đừng sợ sai, quan trọng là học được gì từ lỗi sai đó để vững vàng hơn.
                 </div>
                 <div style="font-size: 0.95em; color: #555;">
                     Hãy làm lại các câu ở dưới và nhấn "Kiểm tra lại" - em có 2 lần nhấn. <br>
@@ -882,9 +882,9 @@
             btn.disabled = true;
             alert("TUYỆT VỜI! Em đã hiểu bài hơn rồi đấy.");
             
-            setTimeout(() => {
-                if(confirm("Hãy cố gắng và cẩn thận hơn ở những bài sau nhé!")) location.reload();
-            }, 1000);
+            //setTimeout(() => {
+            //    if(confirm("Hãy cố gắng và cẩn thận hơn ở những bài sau nhé!")) location.reload();
+            //}, 1000);
 
         } else {
             // Trường hợp 2: Vẫn còn sai
@@ -897,7 +897,7 @@
                 btn.innerHTML = "ĐÃ HẾT LƯỢT KIỂM TRA";
                 btn.style.background = "#7f8c8d"; // Màu xám
                 btn.disabled = true;
-                alert("Rất tiếc, em đã hết lượt kiểm tra lại.\nHãy xem lại sách giáo khoa hoặc hỏi thầy cô để được giải đáp nhé!");
+                alert("Rất tiếc, em đã hết lượt kiểm tra lại.\nHãy xem lại sách vở hoặc hỏi thầy cô để được giải đáp nhé!");
             }
         }
     }
@@ -907,4 +907,3 @@
 
 </body>
 </html>
-
