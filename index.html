@@ -116,6 +116,73 @@
         overflow: hidden;    /* Ẩn phần tràn nếu có (an toàn) */
     }
 	
+	/* CSS cho Popup chuyên nghiệp */
+.custom-modal {
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background: rgba(0, 0, 0, 0.6); /* Làm tối nền */
+    backdrop-filter: blur(5px); /* Làm mờ nền sau */
+    z-index: 9999;
+    justify-content: center; 
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px; /* Bo góc cực đẹp */
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3); /* Đổ bóng sâu */
+    text-align: center;
+    position: relative;
+    transform: translateY(0);
+}
+
+.modal-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.modal-body {
+    text-align: left;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.btn-close {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-close:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Hiệu ứng rung động cho popup đặc biệt */
+.special-border {
+    border: 3px solid #f1c40f;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+	
+	
     </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -144,13 +211,40 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN 401</h1>
+        <h1 class="brand-title">TOÁN THẦY QUÂN 1018</h1>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
         <input type="text" id="hs-name" placeholder="Họ và tên học sinh">
         <input type="text" id="exam-code" placeholder="Nhập Mã Đề Thi (Chú ý VIẾT HOA)">
         <button class="btn" onclick="vaoThi()">BẮT ĐẦU LÀM BÀI</button>
+		
+		<button class="btn" onclick="xuLyBamNut(event)">Cách học</button>
+
+<div id="modal-huong-dan" class="custom-modal">
+    <div class="modal-content">
+        <div class="modal-header">📖 HƯỚNG DẪN SỬ DỤNG</div>
+        <div class="modal-body">
+            <p>1. <b>Chọn đáp án:</b> Tick vào các ô trả lời tương ứng.</p>
+            <p>2. <b>Nộp bài:</b> Hệ thống sẽ chấm điểm sau 3 giây.</p>
+            <p>3. <b>Sửa sai:</b> Nút "Grow Your Mind" sẽ hiện ra nếu bạn có câu chưa đúng.</p>
+        </div>
+        <button class="btn-close" onclick="dongModal('modal-huong-dan')">Đã hiểu</button>
+    </div>
+</div>
+
+<div id="modal-bi-mat" class="custom-modal">
+    <div class="modal-content special-border">
+        <div class="modal-header" style="color: #e74c3c;">🎉 BÍ MẬT ĐƯỢC MỞ KHÓA!</div>
+        <div class="modal-body">
+            <p>Bạn thật kiên trì khi bấm tới 10 lần!</p>
+            <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXV0c3VwendhMmJ5ajZpcDV0MHY5ZWUyYW5qMHM0a3V3N2w4cm1rMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tnMUXTkYUWKe1dasNJ/giphy.gif" alt="Secret Image" style="width:100%; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <p style="margin-top:10px; font-style: italic;">"Cần cù bù thông minh, chúc bạn học tốt!"</p>
+        </div>
+        <button class="btn-close" onclick="dongModal('modal-bi-mat')">Tuyệt vời</button>
+    </div>
+</div>
+		
         <button class="btn btn-outline" onclick="showLoginAdmin()" style="font-size: 0.85em; padding: 8px;">Dành cho Giáo viên</button>
 
         <div class="footer-credit">Design by QuânPT</div>
@@ -944,6 +1038,34 @@
             }
         }
     }
+
+let clickCount = 0;
+let clickTimer;
+
+function xuLyBamNut(event) {
+    clickCount++;
+    
+    // Xóa bộ đếm thời gian reset nếu đang bấm tiếp
+    clearTimeout(clickTimer);
+    
+    // Nếu ngừng bấm quá 800ms thì mới bắt đầu kiểm tra kết quả
+    clickTimer = setTimeout(() => {
+        if (clickCount === 1) {
+            moModal('modal-huong-dan');
+        } else if (clickCount >= 10) {
+            moModal('modal-bi-mat');
+        }
+        clickCount = 0; // Reset sau khi thực hiện xong
+    }, 300); // 300ms là khoảng chờ đủ nhanh để biết họ bấm 1 hay nhiều lần
+}
+
+function moModal(id) {
+    document.getElementById(id).style.display = 'flex';
+}
+
+function dongModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
 
 
 </script>
