@@ -198,7 +198,42 @@
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
 }
-	
+
+.brand-logo-container {
+        text-align: center;        /* Căn giữa logo */
+        padding: 20px 0;           /* Khoảng cách trên dưới */
+        margin: 0 auto;            /* Đảm bảo căn giữa */
+    }
+
+    .brand-logo-link {
+        display: inline-block;     /* Giúp link ôm sát ảnh */
+        text-decoration: none;     /* Bỏ gạch chân link */
+    }
+
+    .brand-logo {
+        max-width: 90%;            /* Không vượt quá 90% chiều rộng màn hình */
+        height: auto;              /* Giữ tỷ lệ ảnh */
+        display: block;
+        margin: 0 auto;            /* Căn giữa ảnh nếu cần */
+    }
+
+    /* Tối ưu cho điện thoại (màn hình nhỏ hơn 768px) */
+    @media (max-width: 768px) {
+        .brand-logo-container {
+            padding: 15px 0;
+        }
+        
+        .brand-logo {
+            max-width: 95%;        /* Trên mobile chiếm gần hết chiều rộng */
+        }
+    }
+
+    /* Tối ưu cho điện thoại rất nhỏ */
+    @media (max-width: 480px) {
+        .brand-logo {
+            max-width: 100%;
+        }
+    }
 	
     </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -228,7 +263,14 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN 433</h1>
+<!-- LOGO -->
+<div class="brand-logo-container">
+    <a href="/" class="brand-logo-link">
+        <img src="https://i.postimg.cc/QMrZpRsc/TTQ.jpg" 
+             alt="Toán Thầy Quân" 
+             class="brand-logo">
+    </a>
+</div>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
