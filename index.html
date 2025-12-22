@@ -211,25 +211,34 @@
         text-decoration: none;     /* Bỏ gạch chân link */
     }
 
-    .brand-logo {
-        max-width: 90%;            /* Không vượt quá 90% chiều rộng màn hình */
-        height: auto;              /* Giữ tỷ lệ ảnh */
+	.brand-logo {
+        height: auto;
         display: block;
-        margin: 0 auto;            /* Căn giữa ảnh nếu cần */
+        margin: 0 auto;
+        
+        /* Giới hạn tối đa 600px trên màn hình lớn */
+        max-width: 600px;
+        
+        /* Trên màn hình lớn, sẽ hiển thị tối đa 600px (không vượt quá) */
+        width: 100%;                   /* Chiếm full nếu nhỏ hơn 600px */
     }
 
-    /* Tối ưu cho điện thoại (màn hình nhỏ hơn 768px) */
+    /* Responsive cho màn hình trung bình và nhỏ */
+    @media (max-width: 992px) {
+        .brand-logo {
+            max-width: 90%;            /* Vẫn giữ % để co giãn đẹp */
+        }
+    }
+
     @media (max-width: 768px) {
         .brand-logo-container {
             padding: 15px 0;
         }
-        
         .brand-logo {
-            max-width: 95%;        /* Trên mobile chiếm gần hết chiều rộng */
+            max-width: 95%;
         }
     }
 
-    /* Tối ưu cho điện thoại rất nhỏ */
     @media (max-width: 480px) {
         .brand-logo {
             max-width: 100%;
@@ -267,7 +276,7 @@
 <!-- LOGO -->
 <div class="brand-logo-container">
     <a href="/" class="brand-logo-link">
-        <img src="https://i.postimg.cc/XvMxXWWw/TTQ-2.jpg" 
+        <img src="https://i.postimg.cc/bwcrVYjV/TTQ3.jpg" 
              alt="Toán Thầy Quân" 
              class="brand-logo">
     </a>
