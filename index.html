@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-    // --- NHỚ THAY LINK API, LINK TRANG THỐNG KÊ ---
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -755,12 +754,12 @@
             `;
             
             msgDiv.innerHTML = `
-                <div style="font-weight: bold; font-size: 1.1em; margin-bottom: 8px;">
+                <div style="font-weight: bold; font-size: 0.98em; margin-bottom: 8px;">
                     Mỗi câu trả lời chưa đúng là một cơ hội để các em hiểu sâu hơn vấn đề. <br>
                     Đừng sợ sai, quan trọng là chúng ta đã học được gì từ lỗi sai đó để vững vàng hơn.
                 </div>
                 <div style="font-size: 0.95em; color: #555;">
-                    Hãy làm lại các câu ở dưới và nhấn "Kiểm tra lại". <br>
+                    Hãy làm lại các câu ở dưới và nhấn "Kiểm tra lại" - em có 2 lần nhấn. <br>
                     (Lưu ý: Điểm số đã lưu trước đó không thay đổi).
                 </div>
             `;
@@ -881,10 +880,10 @@
             btn.innerHTML = "🎉 HOÀN THÀNH XUẤT SẮC!";
             btn.style.background = "#28a745";
             btn.disabled = true;
-            alert("TUYỆT VỜI! Thầy tin là em đã hiểu bài hơn rồi đấy.");
+            alert("TUYỆT VỜI! Em đã hiểu bài hơn rồi đấy.");
             
             setTimeout(() => {
-                if(confirm("Em có muốn quay lại xem bảng điểm gốc không?")) location.reload();
+                if(confirm("Hãy cố gắng và cẩn thận hơn ở những bài sau nhé!")) location.reload();
             }, 1000);
 
         } else {
@@ -895,10 +894,10 @@
                 alert(`Em đã sửa đúng ${countDung}/${totalSai} câu.\nVẫn còn câu sai (viền đỏ), hãy cố gắng suy nghĩ thêm nhé!`);
             } else {
                 // Hết lượt
-                btn.innerHTML = "ĐÃ HẾT LƯỢT THỬ";
+                btn.innerHTML = "ĐÃ HẾT LƯỢT KIỂM TRA";
                 btn.style.background = "#7f8c8d"; // Màu xám
                 btn.disabled = true;
-                alert("Rất tiếc, em đã hết lượt thử lại.\nHãy xem lại sách giáo khoa hoặc hỏi thầy cô để được giải đáp nhé!");
+                alert("Rất tiếc, em đã hết lượt kiểm tra lại.\nHãy xem lại sách giáo khoa hoặc hỏi thầy cô để được giải đáp nhé!");
             }
         }
     }
