@@ -211,7 +211,7 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN 433</h1>
+        <h1 class="brand-title">TOÁN THẦY QUÂN 832</h1>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
@@ -219,29 +219,46 @@
         <input type="text" id="exam-code" placeholder="Nhập Mã Đề Thi (Chú ý VIẾT HOA)">
         <button class="btn" onclick="vaoThi()">BẮT ĐẦU LÀM BÀI</button>
 		
-		<button class="btn" style="background-color: #52cca1; color: white;" onclick="xuLyBamNut(event)">
-    BÍ KÍP HỌC TẬP
+		<button class="btn" style="background-color: #e3bc3d; color: white;" onclick="xuLyBamNut(event)">
+    Bí kíp học tập
 		</button>
 		
 <div id="modal-huong-dan" class="custom-modal">
     <div class="modal-content">
-        <div class="modal-header">📖 HƯỚNG DẪN SỬ DỤNG</div>
+        <div class="modal-header"> HƯỚNG DẪN HỌC TẬP</div>
         <div class="modal-body">
-            <p>1. <b>Chọn đáp án:</b> Tick vào các ô trả lời tương ứng.</p>
-            <p>2. <b>Nộp bài:</b> Hệ thống sẽ chấm điểm sau 3 giây.</p>
-            <p>3. <b>Sửa sai:</b> Nút "Grow Your Mind" sẽ hiện ra nếu bạn có câu chưa đúng.</p>
+    <p>1. Trang web không hiển thị nội dung câu hỏi. Em hãy làm bài trên phiếu bài tập do Thầy/Cô phát, sau đó nhập đáp án tương ứng lên hệ thống.</p>
+    <p>2. Sau khi nộp bài, em sẽ xem được điểm số và biết câu nào đúng, câu nào sai. Hãy xem lại các câu sai, làm lại cẩn thận và tìm đáp án đúng. Học từ sai lầm là cách học rất hiệu quả.</p>
+    <p>3. Khi có câu sai, hệ thống sẽ hiển thị nút “Sửa sai – Grow your mind”. Hãy sử dụng nút này để nhập và kiểm tra lại kết quả của các câu sai trước đó.</p>
+    <p>4. Hãy nhập đầy đủ, chính xác tên của em trước khi làm bài. Đó là cách thể hiện sự trân trọng, yêu thương cái tên của chính mình.</p>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+    <div style="color: #808080; font-size: 15px; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; font-style: italic;">
+        <p>
+            Phía trên là hướng dẫn học tập, còn để xem được 
+            Bí kíp học tập hãy làm như sau: Vào trang web này bằng điện thoại, bấm nhanh vào 
+            nút “BÍ KÍP HỌC TẬP” nhiều hơn <strong>n</strong> lần. Khi đó bí kíp thực sự sẽ hiện ra.
+        </p>
+        
+        <div style="font-size: 13px; margin-top: 10px; border-left: 3px solid #52cca1; padding-left: 10px;">
+            Lưu ý:<br>
+            * Bấm nhanh để không hiện lại bảng hướng dẫn này.<br>
+            ** <strong>n</strong> là kết quả của phép tính:<br> [Tích hai số nguyên tố nhỏ nhất – (Năm hiện tại)^0]*2
         </div>
-        <button class="btn-close" onclick="dongModal('modal-huong-dan')">Đã hiểu</button>
+    </div>
+</div>
+        <button class="btn-close" onclick="dongModal('modal-huong-dan')">Đã sẵn sàng</button>
     </div>
 </div>
 
 <div id="modal-bi-mat" class="custom-modal">
     <div class="modal-content special-border">
-        <div class="modal-header" style="color: #e74c3c;">🎉 BÍ MẬT ĐƯỢC MỞ KHÓA!</div>
+        <div class="modal-header" style="color: #e74c3c;">🎉 BÍ KÍP ĐÃ ĐƯỢC MỞ KHÓA!</div>
         <div class="modal-body">
-            <p>Bạn thật kiên trì khi bấm tới 10 lần!</p>
-            <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXV0c3VwendhMmJ5ajZpcDV0MHY5ZWUyYW5qMHM0a3V3N2w4cm1rMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tnMUXTkYUWKe1dasNJ/giphy.gif" alt="Secret Image" style="width:100%; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <p style="margin-top:10px; font-style: italic;">"Cần cù bù thông minh, chúc bạn học tốt!"</p>
+            <p>Bạn đã tuân thủ đúng hướng dẫn, kiên trì bấm hơn 10 lần, nỗ lực bấm rất nhanh để đọc được bí kíp này!</p>
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhoMmVsa2pmZjhwNWgwMmdoNTdhMHpqbXFzMGhnMmVwYjM5ejhzNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ox5i4KGCCx2OFbv7Aq/giphy.gif" alt="Secret Image" style="width:100%; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <p style="margin-top:10px; font-style: italic;">Chúc bạn có hành trình học tập thú vị và thành công!</p>
+			<p style="color: gray; font-style: italic;">Hãy giữ kín bí kíp này nhé.</p>
         </div>
         <button class="btn-close" onclick="dongModal('modal-bi-mat')">Tuyệt vời</button>
     </div>
