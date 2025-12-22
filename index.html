@@ -144,7 +144,7 @@
     <div id="loader" class="loader"></div>
     
 <div id="main-screen">
-        <h1 class="brand-title">TOÁN THẦY QUÂN - TN </h1>
+        <h1 class="brand-title">TOÁN THẦY QUÂN V8 949</h1>
         
         <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
         
@@ -164,7 +164,7 @@
     </div>
 
     <div id="admin-panel" class="hidden">
-        <a href="https://github.io" style="text-decoration: none;">
+        <a href="https://mrquan9x-2025.github.io/quanlythiv3/" style="text-decoration: none;">
             <button class="btn btn-outline" style="margin-bottom: 20px; border-color: #28a745; color: #28a745; font-weight: bold;">
                 📊 THỐNG KÊ KẾT QUẢ THI
             </button>
@@ -222,7 +222,10 @@
     <div id="result-interface" class="hidden">
         <h2>KẾT QUẢ: <span id="score-display" style="color:red; font-size: 2em"></span></h2>
         <div id="result-details"></div>
-        <button class="btn" onclick="location.reload()">Làm đề khác</button>
+        <button id="btn-fix-mistakes" class="btn" style="background-color: #f39c12; margin-bottom: 10px; display: none;" onclick="cheDoSuaSai()">
+            🛠️ Sửa chữa sai lầm
+        </button>
+		<button class="btn" onclick="location.reload()">Làm đề khác</button>
     </div>
 </div>
 
@@ -256,7 +259,7 @@
     }
 
     // --- THAY LINK API CỦA THẦY VÀO ĐÂY ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbybvwMJ_j4xnOJajxILIS1UjTbCo_vxSMddih_Kpbe7Nx1MYAPK0Y-pb7As318Aije_/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbwrijo6SO5gMM5u7Adr24IaUA7_UoDmb5GKHzNWABLZ-tIK1Fr6FyOpEmX_8Xa4h2pc/exec"; 
     // ---------------------------------------
 
     let currentExamConfig = {};
@@ -410,6 +413,16 @@
             
             hideAll();
             document.getElementById('result-interface').style.display = 'block';
+			// --- ĐOẠN CODE MỚI THÊM: XỬ LÝ NÚT SỬA SAI ---
+            window.ketQuaChiTiet = res.chiTiet; // Lưu kết quả lại để dùng
+            // Nếu điểm < 10 (tức là có câu sai) thì hiện nút Sửa sai
+            if (res.diem < (currentExamConfig.p1_num * currentExamConfig.p1_score + currentExamConfig.p2_num * 1 + currentExamConfig.p3_num * currentExamConfig.p3_score)) { 
+                 document.getElementById('btn-fix-mistakes').style.display = 'block';
+            } else {
+                 document.getElementById('btn-fix-mistakes').style.display = 'none';
+            }
+            // ---------------------------------------------
+			
             document.getElementById('score-display').innerText = res.diem.toFixed(2);
             
             // --- PHẦN MỚI: HIỂN THỊ LỜI NHẮN ĐỘNG VIÊN ---
@@ -711,6 +724,122 @@
         alert("Lưu thành công!");
         showLoader(false);
     }
+
+// --- CÁC HÀM XỬ LÝ CHẾ ĐỘ SỬA SAI (DÁN VÀO CUỐI SCRIPT) ---
+
+    function cheDoSuaSai() {
+        // 1. Ẩn màn hình kết quả, hiện lại màn hình làm bài
+        document.getElementById('result-interface').style.display = 'none';
+        document.getElementById('exam-interface').style.display = 'block';
+        document.getElementById('questions-container').style.display = 'block';
+
+        // 2. Duyệt qua các câu hỏi để Ẩn câu đúng - Hiện câu sai
+        const questionDivs = document.querySelectorAll('.question-box');
+        let countSai = 0;
+
+        questionDivs.forEach((div, index) => {
+            let dataCau = window.ketQuaChiTiet[index];
+            let isWrong = false;
+
+            // Logic xác định câu sai
+            if (Array.isArray(dataCau.ketQua)) {
+                // Dạng 2: Sai bất kỳ ý nào trong 4 ý cũng là sai
+                if (dataCau.ketQua.includes(false)) isWrong = true;
+            } else {
+                // Dạng 1 & 3: 0 điểm là sai
+                if (dataCau.diem == 0) isWrong = true;
+            }
+
+            if (isWrong) {
+                div.style.display = 'block'; // Hiện câu sai
+                div.style.border = '2px solid #f39c12'; // Viền vàng nhắc nhở
+                countSai++;
+            } else {
+                div.style.display = 'none'; // Ẩn câu đúng
+            }
+        });
+
+        // 3. Đổi nút Nộp bài thành nút Kiểm tra lại
+        const btnSubmit = document.querySelector('#exam-interface .btn');
+        // Copy lại nút cũ để sau này restore (nếu cần) - nhưng ở đây ta replace luôn cho nhanh
+        let newBtn = btnSubmit.cloneNode(true);
+        btnSubmit.parentNode.replaceChild(newBtn, btnSubmit);
+        
+        newBtn.innerHTML = "KIỂM TRA LẠI (Không lưu điểm)";
+        newBtn.style.background = "#f39c12"; // Màu cam
+        newBtn.disabled = false;
+        newBtn.onclick = chamDiemTaiCho; // Gọi hàm chấm tại chỗ
+
+        alert(`Bạn có ${countSai} câu chưa trọn vẹn. Hãy bình tĩnh làm lại nhé!`);
+        window.scrollTo(0, 0);
+    }
+
+    function chamDiemTaiCho() {
+        let countDung = 0;
+        let totalSai = 0;
+        
+        const questionDivs = document.querySelectorAll('.question-box');
+
+        // Duyệt qua từng câu đang hiển thị (câu sai)
+        window.ketQuaChiTiet.forEach((dataCau, i) => {
+            const div = questionDivs[i];
+            if (div.style.display === 'none') return; // Bỏ qua câu đã đúng từ trước
+
+            totalSai++;
+            let isCorrectNow = false;
+            let dapAnDung = dataCau.dapAn;
+
+            // Lấy dữ liệu người dùng mới nhập
+            let userVal;
+            
+            // --- LOGIC CHẤM LẠI ---
+            // Dạng 1: Trắc nghiệm
+            if (typeof dapAnDung === 'string' && dapAnDung.length === 1) {
+                const el = document.querySelector(`input[name="c${i}"]:checked`);
+                userVal = el ? el.value : "";
+                if (userVal === dapAnDung) isCorrectNow = true;
+            }
+            // Dạng 2: Đúng Sai
+            else if (Array.isArray(dapAnDung)) {
+                let checkArr = [];
+                for(let j=0; j<4; j++) {
+                    const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
+                    let val = el ? (el.value === 'true') : null;
+                    checkArr.push(val === dapAnDung[j]);
+                }
+                // Phải đúng cả 4 ý mới tính là sửa xong
+                if (!checkArr.includes(false)) isCorrectNow = true;
+            }
+            // Dạng 3: Điền số
+            else {
+                let el = document.getElementById(`c${i}`);
+                userVal = parseFloat(el.value.replace(',', '.'));
+                let valDung = parseFloat(dapAnDung);
+                if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) isCorrectNow = true;
+            }
+
+            // --- HIỂN THỊ KẾT QUẢ TẠI CHỖ ---
+            if (isCorrectNow) {
+                div.style.border = "2px solid green";
+                div.style.backgroundColor = "#f0fff4";
+                countDung++;
+            } else {
+                div.style.border = "2px solid red";
+                div.style.backgroundColor = "#fff5f5";
+            }
+        });
+
+        if (countDung === totalSai) {
+            alert("CHÚC MỪNG! Bạn đã sửa đúng tất cả các lỗi sai.");
+            // Hiện nút Quay lại trang kết quả
+            if(confirm("Bạn đã sửa xong. Bạn có muốn xem lại bảng điểm gốc không?")) {
+                 location.reload();
+            }
+        } else {
+            alert(`Bạn đã sửa đúng ${countDung}/${totalSai} câu. Vẫn còn câu sai, hãy kiểm tra lại các ô viền đỏ!`);
+        }
+    }
+
 </script>
 
 </body>
