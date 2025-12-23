@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOÁN THẦY QUÂN</title>
+    <title>TOÁN THẦY QUÂN 103</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -310,7 +310,7 @@
         <div style="font-size: 13px; margin-top: 10px; border-left: 3px solid #52cca1; padding-left: 10px;">
             Lưu ý:<br>
             * Bấm thật nhanh để không hiện lại bảng hướng dẫn này.<br>
-            ** <strong>n</strong> là kết quả của phép tính:<br><center>[Tích hai số nguyên tố nhỏ nhất – (Năm hiện tại)^0]*2</center>
+            ** <strong>n</strong> là kết quả của phép tính:<br><center>[Tích hai số nguyên tố đầu tiên – (Năm hiện tại)^0]*2</center>
         </div>
     </div>
 </div>
@@ -330,7 +330,20 @@
         <button class="btn-close" onclick="dongModal('modal-bi-mat')">Tuyệt vời</button>
     </div>
 </div>
-		
+
+<div id="modal-sieu-bi-mat" class="custom-modal">
+    <div class="modal-content" style="border: 3px double #ff4757;"> <div class="modal-header" style="color: #ff4757;">🔥 ĐẲNG CẤP KIÊN TRÌ!</div>
+        <div class="modal-body" style="text-align: center;">
+            <p>Bấm tới 20 lần? Bạn thực sự là một "chiến thần" đấy!</p>
+            <img src="LINK_ANH_DAC_BIET_20" style="width:100%; border-radius:15px; margin: 10px 0;">
+            <p><b>Phần thưởng cho bạn:</b> [Nội dung quà tặng hoặc lời chúc đặc biệt của thầy]</p>
+        </div>
+        <button class="btn-popup" style="background-color: #ff4757;" onclick="dongModal('modal-sieu-bi-mat')">Đóng lại</button>
+    </div>
+</div>
+
+
+
         <button class="btn btn-outline" onclick="showLoginAdmin()" style="font-size: 0.85em; padding: 8px;">Dành cho Giáo viên</button>
 
         <div class="footer-credit">Design by QuânPT</div>
@@ -446,7 +459,7 @@
     }
 
     // --- THAY LINK API CỦA THẦY VÀO ĐÂY ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbybvwMJ_j4xnOJajxILIS1UjTbCo_vxSMddih_Kpbe7Nx1MYAPK0Y-pb7As318Aije_/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbwrijo6SO5gMM5u7Adr24IaUA7_UoDmb5GKHzNWABLZ-tIK1Fr6FyOpEmX_8Xa4h2pc/exec"; 
     // ---------------------------------------
 
     let currentExamConfig = {};
@@ -978,7 +991,7 @@
             
             msgDiv.innerHTML = `
                 <div style="font-size: 0.98em; margin-bottom: 8px;">
-                    Mỗi câu trả lời chưa đúng là một cơ hội để các em hiểu sâu hơn vấn đề. 
+                    Mỗi câu trả lời chưa đúng là một cơ hội để em hiểu rõ vấn đề. 
                     Đừng sợ sai, quan trọng là học được gì từ lỗi sai đó để vững vàng hơn.
                 </div>
                 <div style="font-size: 0.95em; color: #555;">
@@ -1130,19 +1143,25 @@ let clickTimer;
 
 function xuLyBamNut(event) {
     clickCount++;
-    
-    // Xóa bộ đếm thời gian reset nếu đang bấm tiếp
     clearTimeout(clickTimer);
     
-    // Nếu ngừng bấm quá 800ms thì mới bắt đầu kiểm tra kết quả
     clickTimer = setTimeout(() => {
-        if (clickCount === 1) {
-            moModal('modal-huong-dan');
-        } else if (clickCount >= 10) {
-            moModal('modal-bi-mat');
+        if (clickCount >= 20) {
+            // Mốc cao nhất: 20 lần trở lên
+            document.getElementById('modal-sieu-bi-mat').style.display = 'flex';
+        } 
+        else if (clickCount >= 10) {
+            // Mốc trung bình: từ 10 đến 19 lần
+            document.getElementById('modal-bi-mat').style.display = 'flex';
+        } 
+        else if (clickCount === 1) {
+            // Mốc thấp nhất: chỉ 1 lần
+            document.getElementById('modal-huong-dan').style.display = 'flex';
         }
-        clickCount = 0; // Reset sau khi thực hiện xong
-    }, 300); // 300ms là khoảng chờ đủ nhanh để biết họ bấm 1 hay nhiều lần
+        
+        // Reset biến đếm sau khi đã mở popup thành công
+        clickCount = 0; 
+    }, 300); // 0.3 giây để đợi xem bạn có bấm tiếp không
 }
 
 function moModal(id) {
