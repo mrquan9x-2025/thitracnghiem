@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HỌC TOÁN THẦY QUÂN 609</title>
+    <title>HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -245,6 +245,61 @@
         }
     }
 	
+
+/* Khung chứa máy bay */
+.plane-wrapper {
+    position: fixed;
+    width: 70px;
+    z-index: 9999;
+    pointer-events: none;
+    left: -100px;
+    top: 30%; 
+    /* Chạy 2 animation cùng lúc: bay quỹ đạo và bồng bềnh */
+    animation: realistic-flight 14s ease-in-out infinite, float 3s ease-in-out infinite;
+}
+
+.plane-wrapper img {
+    width: 100%;
+    display: block;
+}
+
+/* Quỹ đạo bay chính */
+@keyframes realistic-flight {
+    0% {
+        left: -100px;
+        top: 30%;
+        transform: rotate(-15deg);
+        opacity: 0;
+    }
+    5% { opacity: 1; }
+    50% {
+        left: 50vw;
+        top: 20%;
+        transform: rotate(-15deg);
+    }
+    75% {
+        left: 68vw;
+        top: 28%;
+        transform: rotate(8deg);
+    }
+    100% {
+        left: 115vw;
+        top: -5%;
+        transform: rotate(-40deg);
+        opacity: 1;
+    }
+}
+
+/* Hiệu ứng bồng bềnh nhẹ nhàng */
+@keyframes float {
+    0%, 100% { margin-top: 0; }
+    50% { margin-top: -10px; }
+}
+/* Tắt cuộn ngang */
+body {
+    overflow-x: hidden;
+}
+
     </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -268,6 +323,10 @@
 </style>
 </head>
 <body>
+
+<div class="plane-wrapper">
+    <img src="https://i.postimg.cc/59B0ySft/pp2.png" alt="Paper Plane">
+</div>
 
 <div class="container">
     <div id="loader" class="loader"></div>
