@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOÁN THẦY QUÂN 232</title>
+    <title>HỌC TOÁN THẦY QUÂN 609</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -284,7 +284,7 @@
         
         <input type="text" id="hs-name" placeholder="Họ và tên học sinh">
         <input type="text" id="exam-code" placeholder="Nhập Mã Đề Thi (Chú ý VIẾT HOA)">
-        <button class="btn" onclick="vaoThi()">BẮT ĐẦU LÀM BÀI</button>
+        <button class="btn" onclick="vaoThi(event)">BẮT ĐẦU LÀM BÀI</button>
 		
 		<button class="btn" style="background-color: #4cd964; color: white;" onclick="xuLyBamNut(event)">
     Hướng dẫn học tập
@@ -294,8 +294,8 @@
     <div class="modal-content">
         <div class="modal-header"><center>Hướng dẫn học tập</center></div>
         <div class="modal-body">
-    <p>1. Trang web không hiển thị nội dung câu hỏi. Em hãy làm bài trên phiếu bài tập do Thầy/Cô phát, sau đó nhập đáp án tương ứng.</p>
-    <p>2. Sau khi nộp bài, em sẽ xem được điểm số và biết câu nào đúng, câu nào sai. Hãy xem lại các câu sai, làm lại cẩn thận và tìm đáp án đúng. Học từ sai lầm là cách học rất hiệu quả.</p>
+    <p>1. Trang web này không hiển thị nội dung câu hỏi. Em hãy làm bài trên phiếu bài tập do Thầy/Cô phát, sau đó nhập đáp án tương ứng lên đây.</p>
+    <p>2. Sau khi nộp bài, em sẽ xem được điểm số và biết câu nào đúng, câu nào sai. Hãy xem lại các câu sai, làm lại cẩn thận và tìm đáp án đúng. Việc học từ sai lầm rất quan trọng.</p>
     <p>3. Khi có câu sai, hệ thống sẽ hiển thị nút “Sửa sai – Grow your mind”. Hãy sử dụng nút này để nhập và kiểm tra lại kết quả của các câu sai trước đó.</p>
     <p>4. Hãy nhập đầy đủ, chính xác tên của em trước khi làm bài. Đó là cách thể hiện sự trân trọng, yêu thương cái tên của chính mình.</p>
 
@@ -325,7 +325,7 @@
             <p><b>Chúc mừng bạn đã mở ra được bí kíp</b>🎉🌟🥳 Để đọc được những dòng này, bạn đã thực hiện chính xác theo hướng dẫn, nỗ lực bấm rất nhanh và kiên trì bấm hơn 10 lần!</p>
             <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhoMmVsa2pmZjhwNWgwMmdoNTdhMHpqbXFzMGhnMmVwYjM5ejhzNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ox5i4KGCCx2OFbv7Aq/giphy.gif" alt="Secret Image" style="width:100%; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
             <p style="margin-top:10px; font-style: italic;">Chúc bạn có hành trình học tập thú vị và thành công!</p>
-			<p style="color: gray; font-style: italic;">Hãy giữ kín bí kíp này nhé.</p>
+			<p style="color: gray; font-style: italic;">Hãy giữ kín bí kíp này nhé 🤫</p>
         </div>
         <button class="btn-close" onclick="dongModal('modal-bi-mat')">Tuyệt vời</button>
     </div>
@@ -344,7 +344,7 @@
 			<p>4. Đây là từ chỉ một hành động di chuyển của con người bằng chân, có tốc độ chậm hơn 🏃 và nhanh hơn 🐄?</p>
         </div>
 		</div>
-		<center><button class="btn-close" onclick="dongModal('modal-sieu-bi-mat')">Ok, I understood!</button></center>
+		<center><button class="btn-close" onclick="dongModal('modal-sieu-bi-mat')">Ok, I understand!</button></center>
     </div>
 </div>
 
@@ -482,50 +482,66 @@
         document.getElementById('result-interface').style.display = 'none';
     }
 
-    async function vaoThi() {
-         // --- CẬP NHẬT: XỬ LÝ HỌ TÊN THÔNG MINH ---
-        const nameInput = document.getElementById('hs-name');
-        let rawName = nameInput.value;
-        
-        // Bước 1: Chuẩn hóa (Tự động viết hoa chữ cái đầu)
-        let cleanName = chuanHoaTen(rawName);
-        
-        // Bước 2: Kiểm tra độ dài (Phải có ít nhất 2 từ)
-        if (!cleanName || cleanName.split(' ').length < 2) {
-            alert("Vui lòng nhập đầy đủ Họ và Tên (Ví dụ: Nguyễn Văn An)");
-            nameInput.focus();
-            return;
-        }
+    async function vaoThi(event) {
+    // 1. LẤY ĐỐI TƯỢNG NÚT VÀ LƯU TRẠNG THÁI CŨ
+    const btn = event.target; 
+    const originalText = btn.innerHTML;
 
-        // Bước 3: Gán lại tên đã chuẩn hóa vào ô input để học sinh nhìn thấy
-        nameInput.value = cleanName;
-        studentName = cleanName; // Lưu vào biến toàn cục
-        // ------------------------------------------
-
-        const code = document.getElementById('exam-code').value.trim();
-        examCode = code; // Lưu mã đề
-
-        if (!studentName || !examCode) {
-            alert("Vui lòng nhập đủ Họ Tên và Mã đề!");
-            return;
-        }
-
-
-        showLoader(true);
-        try {
-            const res = await fetch(`${API_URL}?action=get_exam&maDe=${examCode}&t=${Date.now()}`).then(r => r.json());
-            if(res.status === 'error') { alert(res.msg); showLoader(false); return; }
-            
-            hideAll();
-            document.getElementById('exam-interface').style.display = 'block';
-            document.getElementById('exam-title-display').innerText = res.data.tenDe;
-            
-            currentExamConfig = res.data.config;
-            currentExamQuestions = res.data.cauHoi;
-            renderQuestions(res.data.cauHoi, res.data.config);
-        } catch(e) { console.error(e); alert("Lỗi kết nối!"); }
-        showLoader(false);
+    // --- XỬ LÝ HỌ TÊN THÔNG MINH ---
+    const nameInput = document.getElementById('hs-name');
+    let rawName = nameInput.value;
+    
+    let cleanName = chuanHoaTen(rawName);
+    
+    if (!cleanName || cleanName.split(' ').length < 2) {
+        alert("Vui lòng nhập đầy đủ Họ và Tên (Ví dụ: Nguyễn Văn An)");
+        nameInput.focus();
+        return;
     }
+
+    nameInput.value = cleanName;
+    studentName = cleanName; 
+
+    const code = document.getElementById('exam-code').value.trim();
+    examCode = code; 
+
+    if (!studentName || !examCode) {
+        alert("Vui lòng nhập đủ Họ Tên và Mã đề!");
+        return;
+    }
+
+    // 2. ĐỔI GIAO DIỆN NÚT THÀNH LOADING
+    btn.disabled = true;
+    // Sử dụng class btn-loader mà bạn đã có sẵn trong CSS
+    btn.innerHTML = '<div class="btn-loader"></div> Đang tải đề...';
+
+    // Bỏ showLoader(true) cũ vì đã có loading tại nút
+    try {
+        const res = await fetch(`${API_URL}?action=get_exam&maDe=${examCode}&t=${Date.now()}`).then(r => r.json());
+        
+        if(res.status === 'error') { 
+            alert(res.msg); 
+            return; 
+        }
+        
+        hideAll();
+        document.getElementById('exam-interface').style.display = 'block';
+        document.getElementById('exam-title-display').innerText = res.data.tenDe;
+        
+        currentExamConfig = res.data.config;
+        currentExamQuestions = res.data.cauHoi;
+        renderQuestions(res.data.cauHoi, res.data.config);
+
+    } catch(e) { 
+        console.error(e); 
+        alert("Lỗi kết nối hoặc không tìm thấy đề!"); 
+    } finally {
+        // 3. TRẢ LẠI TRẠNG THÁI NÚT BAN ĐẦU
+        // Lệnh trong finally luôn chạy kể cả khi fetch thành công hay thất bại
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
 
     function renderQuestions(list, config) {
         let html = '';
