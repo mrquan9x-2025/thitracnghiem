@@ -1,1260 +1,279 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HỌC TOÁN THẦY QUÂN</title>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Dashboard</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- LIBRARIES (ĐÃ CẬP NHẬT PHIÊN BẢN CHUẨN) -->
+    <!-- 1. Chart.js (UMD Version - Ổn định nhất) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- 2. SheetJS (Xuất Excel) -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        /* BRANDING */
-        .brand-title { text-align: center; color: #007bff; text-transform: uppercase; margin-bottom: 5px; font-size: 2em; letter-spacing: 1px; }
-        .brand-subtitle { text-align: center; color: #666; font-style: italic; font-size: 1.1em; margin-top: 0; margin-bottom: 30px; }
-
-        h2 { text-align: center; color: #333; margin-top: 30px;}
-        .section-header { background: #e9ecef; padding: 10px; margin: 20px 0 10px; font-weight: bold; border-radius: 5px; color: #495057; text-transform: uppercase; font-size: 0.9em; }
-        
-        /* UI Elements */
-        .btn { background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 15px; font-weight: bold; transition: 0.2s; }
-        .btn:hover { background: #0056b3; }
-        .btn-outline { background: transparent; border: 1px solid #007bff; color: #007bff; margin-top: 15px; }
-        
-        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
-        
-        /* Grid Layout Admin */
-        .config-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; }
-        .config-group { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px; }
-        .config-label { font-size: 0.9em; font-weight: bold; color: #333; margin-bottom: 5px; display: block; }
-
-        /* Exam Layout */
-        .question-box { background: #fff; padding: 20px; margin-bottom: 15px; border: 1px solid #e1e4e8; border-radius: 8px; }
-        .q-title { font-weight: bold; margin-bottom: 10px; display: block; color: #2c3e50; }
-        
-        /* --- SỬA UI MOBILE --- */
-        .options-grid { 
-            display: flex; 
-            gap: 5px; /* Giảm khoảng cách để không bị rớt dòng */
-            justify-content: space-between; /* Căn đều 2 bên */
-            margin-top: 10px; 
-            flex-wrap: nowrap; /* Không cho phép xuống dòng */
-        }
-        .option-item { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            cursor: pointer; 
-            flex: 1; /* Chia đều chiều rộng */
-        }
-        .option-label { font-weight: bold; margin-bottom: 8px; color: #555; }
-        input[type="radio"] { transform: scale(1.3); cursor: pointer; margin: 0; }
-
-        .matrix-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; }
-        .tf-group { display: flex; gap: 20px; }
-        .tf-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        /* -------------------- */
-
-        .warning-box { background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin: 20px 0; border: 1px solid #ffeeba; text-align: center; font-weight: bold; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; display: none;}
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .hidden { display: none; }
-
-	/* Spinner nhỏ nằm trong nút bấm */
-	.btn-loader {
-    		border: 3px solid rgba(255,255,255,0.3);
-    		border-top: 3px solid white;
-    		border-radius: 50%;
-    		width: 20px;
-    		height: 20px;
-    		animation: spin 1s linear infinite;
-    		display: inline-block;
-    		vertical-align: middle;
-    		margin-right: 10px;
-	}
-	/* Trạng thái nút khi đang xử lý */
-		.btn:disabled {
-    		background-color: #95a5a6; /* Màu xám */
-    		cursor: not-allowed;
-    		opacity: 0.8;
-	}
-
-	/* Thêm vào trong thẻ <style> */
-	.footer-credit {
-    		margin-top: 40px;
-    		font-size: 12px;
-    		color: #999;
-    		text-align: center;
-    		border-top: 1px solid #eee;
-    		padding-top: 15px;
-    		font-family: monospace; /* Font chữ kiểu code cho ngầu */
-	}
-/*Đoạn này của meme*/
-	/* Nút hover đẹp hơn */
-    #meme-button:hover {
-        background: #2dd8bc;  /* Tối hơn chút khi hover */
-        transform: translateY(-2px);
-        transition: all 0.3s ease;
-    }
-
-    /* Meme responsive hoàn hảo trên mọi thiết bị, đặc biệt mobile */
-    .meme-img {
-        max-width: 100%;     /* Không vượt quá chiều rộng màn hình/container */
-        max-height: 300px;   /* Giữ chiều cao tối đa */
-        height: auto;        /* Tự điều chỉnh tỷ lệ */
-        width: auto;         /* Giữ tỷ lệ gốc */
-        border-radius: 12px;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-        opacity: 0;
-        transition: opacity 0.6s ease;
-        display: block;      /* Tránh lỗi inline spacing */
-        margin: 0 auto;      /* Căn giữa chính xác */
-    }
-
-    /* Đảm bảo không tràn khung nếu có vấn đề overflow */
-    #meme-container {
-        overflow: hidden;    /* Ẩn phần tràn nếu có (an toàn) */
-    }
-	
-	/* CSS cho Popup chuyên nghiệp */
-.custom-modal {
-    display: none; 
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100%; height: 100%; 
-    background: rgba(0, 0, 0, 0.6); /* Làm tối nền */
-    backdrop-filter: blur(5px); /* Làm mờ nền sau */
-    z-index: 9999;
-    justify-content: center; 
-    align-items: center;
-    animation: fadeIn 0.3s ease;
-}
-
-/* 1. Sửa lại khung chứa nội dung */
-.modal-content {
-    background: white;
-    padding: 20px; /* Giảm padding một chút để tiết kiệm không gian */
-    border-radius: 20px;
-    width: 90%;
-    max-width: 450px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    
-    /* THÊM 3 DÒNG NÀY */
-    max-height: 75vh;    /* Giới hạn chiều cao tối đa bằng 85% màn hình */
-    display: flex;       /* Chuyển sang dạng flex để sắp xếp các phần bên trong */
-    flex-direction: column; 
-}
-
-.modal-header {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #2c3e50;
-}
-
-/* 2. Sửa lại phần chứa chữ (phần này sẽ có thanh cuộn) */
-.modal-body {
-    text-align: left;
-    line-height: 1.6;
-    color: #444;
-    margin-bottom: 20px;
-
-    /* THÊM 2 DÒNG NÀY */
-    overflow-y: auto;    /* Hiện thanh cuộn dọc khi nội dung quá dài */
-    padding-right: 10px; /* Tạo khoảng trống để thanh cuộn không đè lên chữ */
-}
-/* Tùy chỉnh thanh cuộn cho Popup */
-.modal-body::-webkit-scrollbar {
-    width: 6px;
-}
-.modal-body::-webkit-scrollbar-thumb {
-    background-color: #52cca1; /* Màu xanh của bạn */
-    border-radius: 10px;
-}
-
-
-.btn-close {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.btn-close:hover {
-    background: #2980b9;
-    transform: scale(1.05);
-}
-
-/* Hiệu ứng rung động cho popup đặc biệt */
-.special-border {
-    border: 3px solid #f1c40f;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* LOGO */
-.brand-logo-container {
-        text-align: center;        /* Căn giữa logo */
-        padding: 5px 0;           /* Khoảng cách trên dưới */
-        margin: 0 auto;            /* Đảm bảo căn giữa */
-    }
-
-    .brand-logo-link {
-        display: inline-block;     /* Giúp link ôm sát ảnh */
-        text-decoration: none;     /* Bỏ gạch chân link */
-    }
-
-	.brand-logo {
-        height: auto;
-        display: block;
-        margin: 0 auto;
-        
-        /* Giới hạn tối đa 600px trên màn hình lớn */
-        max-width: 600px;
-        
-        /* Trên màn hình lớn, sẽ hiển thị tối đa 600px (không vượt quá) */
-        width: 100%;                   /* Chiếm full nếu nhỏ hơn 600px */
-    }
-
-    /* Responsive cho màn hình trung bình và nhỏ */
-    @media (max-width: 992px) {
-        .brand-logo {
-            max-width: 90%;            /* Vẫn giữ % để co giãn đẹp */
-        }
-    }
-
-    @media (max-width: 768px) {
-        .brand-logo-container {
-            padding: 15px 0;
-        }
-        .brand-logo {
-            max-width: 95%;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .brand-logo {
-            max-width: 100%;
-        }
-    }
-	
-
-/* Khung chứa máy bay */
-.plane-wrapper {
-    position: fixed;
-    width: 70px;
-    z-index: 9999;
-    pointer-events: none;
-    left: -100px;
-    top: 30%; 
-    /* Chạy 2 animation cùng lúc: bay quỹ đạo và bồng bềnh */
-    animation: realistic-flight 14s ease-in-out infinite, float 3s ease-in-out infinite;
-}
-
-.plane-wrapper img {
-    width: 100%;
-    display: block;
-}
-
-/* Quỹ đạo bay chính */
-@keyframes realistic-flight {
-    0% {
-        left: -100px;
-        top: 30%;
-        transform: rotate(-15deg);
-        opacity: 0;
-    }
-    5% { opacity: 1; }
-    50% {
-        left: 50vw;
-        top: 20%;
-        transform: rotate(-15deg);
-    }
-    75% {
-        left: 68vw;
-        top: 28%;
-        transform: rotate(8deg);
-    }
-    100% {
-        left: 115vw;
-        top: -5%;
-        transform: rotate(-40deg);
-        opacity: 1;
-    }
-}
-
-/* Hiệu ứng bồng bềnh nhẹ nhàng */
-@keyframes float {
-    0%, 100% { margin-top: 0; }
-    50% { margin-top: -10px; }
-}
-/* Tắt cuộn ngang */
-body {
-    overflow-x: hidden;
-}
-
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; }
+        #sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; background: #343a40; color: #fff; overflow-y: auto; transition: 0.3s; z-index: 1000; }
+        #sidebar .nav-link { color: #adb5bd; padding: 10px 20px; border-left: 4px solid transparent; cursor: pointer; }
+        #sidebar .nav-link:hover, #sidebar .nav-link.active { color: #fff; background: rgba(255,255,255,0.1); border-left-color: #0d6efd; }
+        #sidebar .session-header { font-size: 0.75rem; text-transform: uppercase; color: #6c757d; padding: 15px 20px 5px; font-weight: bold; }
+        #content { margin-left: 260px; height: 100vh; overflow-y: auto; padding: 20px; transition: 0.3s; }
+        .stat-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 100%; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-icon { font-size: 2rem; opacity: 0.2; position: absolute; right: 20px; top: 20px; }
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #343a40; z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .hidden { display: none !important; }
+        .table-cal { font-size: 0.9rem; }
+        .table-cal th { background-color: #e9ecef; }
+        @media (max-width: 768px) { #sidebar { left: -260px; } #sidebar.show { left: 0; } #content { margin-left: 0; } }
     </style>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-<style>
-    /* Thêm CSS cho dòng lời nhắn */
-    .feedback-msg {
-        margin-top: 15px;
-        padding: 15px;
-        border-radius: 8px;
-        /* font-style: italic; */
-        text-align: center;
-        font-size: 1.1em;
-        animation: fadeIn 1s ease-in;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    
-    /* Màu sắc theo mức độ */
-    .fb-low { background: #fff5f5; color: #c53030; border-left: 5px solid #c53030; } /* Đỏ */
-    .fb-mid { background: #fffaf0; color: #d69e2e; border-left: 5px solid #d69e2e; } /* Vàng cam */
-    .fb-high { background: #f0fff4; color: #2f855a; border-left: 5px solid #2f855a; } /* Xanh lá */
-</style>
 </head>
 <body>
 
-<div class="plane-wrapper">
-    <img src="https://i.postimg.cc/59B0ySft/pp2.png" alt="Paper Plane">
-</div>
-
-<div class="container">
-    <div id="loader" class="loader"></div>
-    
-<div id="main-screen">
-<!-- LOGO -->
-<div class="brand-logo-container">
-    <img src="https://i.postimg.cc/RVDS2S58/TTQ4.jpg" 
-    alt="Toán Thầy Quân" 
-    class="brand-logo">
-</div>
-        
-        <p class="brand-subtitle" id="slogan-display">Chăm học Toán - Sáng tương lai</p>
-        
-        <input type="text" id="hs-name" placeholder="Họ và tên học sinh">
-        <input type="text" id="exam-code" placeholder="Nhập Mã Đề Thi (Chú ý VIẾT HOA)">
-        <button class="btn" onclick="vaoThi(event)">BẮT ĐẦU LÀM BÀI</button>
-		
-		<button class="btn" style="background-color: #4cd964; color: white;" onclick="xuLyBamNut(event)">
-    Hướng dẫn học tập
-		</button>
-		
-<div id="modal-huong-dan" class="custom-modal">
-    <div class="modal-content">
-        <div class="modal-header"><center>Hướng dẫn học tập</center></div>
-        <div class="modal-body">
-    <p>1. Trang web này không hiển thị nội dung câu hỏi. Em hãy làm bài trên phiếu bài tập do Thầy/Cô phát, sau đó nhập đáp án tương ứng lên đây.</p>
-    <p>2. Sau khi nộp bài, em sẽ xem được điểm số và biết câu nào đúng, câu nào sai. Hãy xem lại các câu sai, làm lại cẩn thận và tìm đáp án đúng. Việc học từ sai lầm rất quan trọng.</p>
-    <p>3. Khi có câu sai, hệ thống sẽ hiển thị nút “Sửa sai – Grow your mind”. Hãy sử dụng nút này để nhập và kiểm tra lại kết quả của các câu sai trước đó.</p>
-    <p>4. Hãy nhập đầy đủ, chính xác tên của em trước khi làm bài. Đó là cách thể hiện sự trân trọng, yêu thương cái tên của chính mình.</p>
-
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-    <div style="color: #808080; font-size: 15px; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; font-style: italic;">
-        <p>
-            Phía trên là hướng dẫn học tập, còn để xem được 
-            Bí kíp học tập hãy làm như sau: Vào trang web này bằng điện thoại, bấm nhanh vào 
-            nút “Hướng dẫn học tập” nhiều hơn <strong>n</strong> lần. Khi đó bí kíp thực sự sẽ hiện ra.
-        </p>
-        
-        <div style="font-size: 13px; margin-top: 10px; border-left: 3px solid #52cca1; padding-left: 10px;">
-            Lưu ý:<br>
-            * Bấm thật nhanh để không hiện lại bảng hướng dẫn này.<br>
-            ** <strong>n</strong> là kết quả của phép tính:<br><center>[Tích hai số nguyên tố đầu tiên ➖ (Năm hiện tại)🧢(Xác suất một người được sinh ra vào ngày 30 tháng 2)]❌(Số lần chiến tranh thế giới đã xảy ra)</center>
+    <!-- LOGIN SCREEN -->
+    <div id="loginOverlay">
+        <div class="card p-4 shadow-lg text-center" style="width: 350px;">
+            <h4 class="mb-3 text-primary"><i class="bi bi-shield-lock"></i> Đăng nhập Quản trị</h4>
+            <input type="password" id="adminPass" class="form-control mb-3" placeholder="Nhập mật khẩu Admin">
+            <button onclick="loadData()" class="btn btn-primary w-100 fw-bold">Truy cập Dashboard</button>
+            <div id="loginMsg" class="text-danger mt-2 small"></div>
         </div>
     </div>
-</div>
-        <button class="btn-close" onclick="dongModal('modal-huong-dan')">Đã sẵn sàng</button>
-    </div>
-</div>
 
-<div id="modal-bi-mat" class="custom-modal">
-    <div class="modal-content special-border">
-        <div class="modal-header" style="color: #e74c3c;"><center>BÍ KÍP HỌC TẬP</center></div>
-        <div class="modal-body">
-            <p><b>Chúc mừng bạn đã mở ra được bí kíp</b>🎉🌟🥳 Để đọc được những dòng này, bạn đã thực hiện chính xác theo hướng dẫn, nỗ lực bấm rất nhanh và kiên trì bấm hơn 10 lần!</p>
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhoMmVsa2pmZjhwNWgwMmdoNTdhMHpqbXFzMGhnMmVwYjM5ejhzNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ox5i4KGCCx2OFbv7Aq/giphy.gif" alt="Secret Image" style="width:100%; border-radius:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <p style="margin-top:10px; font-style: italic;">Chúc bạn có hành trình học tập thú vị và thành công!</p>
-			<p style="color: gray; font-style: italic;">Hãy giữ kín bí kíp này nhé 🤫</p>
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+        <div class="p-3 mb-2 bg-dark border-bottom border-secondary text-center">
+            <h5 class="m-0 fw-bold text-white"><i class="bi bi-bar-chart-fill"></i> TEACHER ADMIN</h5>
+            <small class="text-muted" id="subjectName">Loading...</small>
         </div>
-        <button class="btn-close" onclick="dongModal('modal-bi-mat')">Tuyệt vời</button>
-    </div>
-</div>
-
-<div id="modal-sieu-bi-mat" class="custom-modal">
-    <div class="modal-content" style="border: 3px double #ff4757;"> <div class="modal-header" style="color: #ff4757;"><center>Đây không phải bí kíp</center></div>
-        <div class="modal-body" style="text-align: center;">
-            <p> 😮 Bấm tới tận đây sao? Đã qua số lần bấm để đọc bí kíp. Bạn đọc rồi chứ?</p>
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExamRuNzBtcHQydDB2NjE5bzViZmFvbmphbXd3cHBtNmV4OXl0Ym9lcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/EE1nWSWho921w4m1IS/giphy.gif" style="width:100%; border-radius:15px; margin: 10px 0;"></center>
-			<p>Vì bạn đang rảnh nên hãy chơi trò Đố chữ nhé. Mỗi câu hỏi dưới đây có đáp án là một từ đơn Tiếng Việt. Sau khi tìm đủ 4 từ, ghép chúng lại thành một câu.</p>
-			<div class="modal-body">
-			<p>1. Từ này chỉ hành động lặp đi lặp lại một kỹ năng nào đó để trở nên thành thạo (ví dụ: ... 🏊🏼‍, ... ✍️)?</p>
-			<p>2. Tiếng đầu tiên trong một tính từ dùng để chỉ sự thành thật, ngay thẳng, không bao giờ gian dối hay lừa lọc người khác?</p>
-			<p>3. Từ này chỉ hành động tiếp thu kiến thức, luyện tập kỹ năng dưới sự hướng dẫn của thầy cô hoặc tự mình tìm tòi qua sách vở?</p>
-			<p>4. Đây là từ chỉ một hành động di chuyển của con người bằng chân, có tốc độ chậm hơn 🏃 và nhanh hơn 🐄?</p>
-        </div>
-		</div>
-		<center><button class="btn-close" onclick="dongModal('modal-sieu-bi-mat')">Ok, I understand!</button></center>
-    </div>
-</div>
-
-
-
-        <button class="btn btn-outline" onclick="showLoginAdmin()" style="font-size: 0.85em; padding: 8px;">Dành cho Giáo viên</button>
-
-        <div class="footer-credit">Design by QuânPT</div>
-    </div>
-
-    <div id="login-admin" class="hidden">
-        <h2>Giáo viên Đăng nhập</h2>
-        <input type="password" id="admin-pass" placeholder="Mật khẩu">
-        <button class="btn" onclick="loginAdmin()">Vào quản trị</button>
-        <button class="btn btn-outline" onclick="location.reload()">Quay lại</button>
-    </div>
-
-    <div id="admin-panel" class="hidden">
-        <a href="https://mrquan9x-2025.github.io/quanlythiv3/" style="text-decoration: none;">
-            <button class="btn btn-outline" style="margin-bottom: 20px; border-color: #28a745; color: #28a745; font-weight: bold;">
-                📊 THỐNG KÊ KẾT QUẢ THI
-            </button>
-        </a>
-        <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
-
-        <h2>Tạo Đề Thi Mới</h2>
-        <input type="text" id="new-exam-code" placeholder="Mã đề (VIẾT HOA, không có dấu. Ví dụ: 12TOAN5)">
-        <input type="text" id="new-exam-name" placeholder="Tên đề thi">
-
-        <div class="config-group">
-            <div class="section-header" style="margin-top:0">Cấu hình Phần 1 (Trắc nghiệm)</div>
-            <div class="config-row">
-                <div><label class="config-label">Số câu:</label><input type="number" id="cfg-p1-num" value="12"></div>
-                <div><label class="config-label">Điểm/câu:</label><input type="number" id="cfg-p1-score" value="0.25" step="0.01"></div>
+        <div class="nav flex-column" id="sidebarMenu">
+            <div class="nav-link active" onclick="renderOverview()"><i class="bi bi-grid-1x2-fill me-2"></i> TỔNG QUAN CHUNG</div>
+            <!-- MENU TÍNH ĐIỂM -->
+            <div class="nav-link text-warning" onclick="renderCalculationTool()">
+                <i class="bi bi-calculator-fill me-2"></i> TÍNH ĐIỂM & XUẤT FILE
             </div>
+            <div id="dynamicMenu"></div>
         </div>
-
-        <div class="config-group">
-            <div class="section-header">Cấu hình Phần 2 (Đúng/Sai)</div>
-            <div class="config-row">
-                <div><label class="config-label">Số câu:</label><input type="number" id="cfg-p2-num" value="4"></div>
-                <div><label class="config-label">Tính điểm:</label>
-                    <select id="cfg-p2-mode">
-                        <option value="bac_thang">Bậc thang (0.1 - 0.25 - 0.5 - 1)</option>
-                        <option value="chia_deu">Chia đều (0.25đ / ý)</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="config-group">
-            <div class="section-header">Cấu hình Phần 3 (Trả lời ngắn)</div>
-            <div class="config-row">
-                <div><label class="config-label">Số câu:</label><input type="number" id="cfg-p3-num" value="6"></div>
-                <div><label class="config-label">Điểm/câu:</label><input type="number" id="cfg-p3-score" value="0.5" step="0.01"></div>
-            </div>
-        </div>
-
-        <div style="background: #e2e6ea; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 0.9em;">
-            <strong>Hướng dẫn:<br> </strong> 
-             a) Tổng điểm các câu trong đề thi không bắt buộc phải bằng 10. Tuy nhiên, để sử dụng tốt các chức năng "Lời nhắc" dành cho học sinh và "Xem phổ điểm" thì nên để điểm tối đa bằng 10 (hoặc xấp xỉ 10).<br> 
-             b) Dùng dấu chấm (.) để viết số thập phân.<br>
-        	 c) Nhập liên tiếp đáp án từ trên xuống dưới (Hết P1 > P2 > P3). Ví dụ:<br>
-				1. A<br>
-				2. B<br>
-				3. ĐSĐS<br>
-				4. 5.25
-        </div>
-        <textarea id="exam-data-input" rows="8" placeholder="Dán đáp án vào đây..."></textarea>
-        
-        <button class="btn" onclick="luuDeThi(event)">Lưu Đề Thi</button>
-        <button class="btn btn-outline" onclick="location.reload()">Thoát</button>
+        <div class="mt-auto p-3 text-center border-top border-secondary text-muted" style="font-size: 0.8rem;">Design by Phạm Thế Quân</div>
     </div>
 
-    <div id="exam-interface" class="hidden">
-        <h2 id="exam-title-display"></h2>
-        <div id="questions-container"></div>
-        <button class="btn" onclick="nopBai()">NỘP BÀI</button>
+    <!-- MAIN CONTENT -->
+    <div id="content">
+        <button class="btn btn-outline-dark d-md-none mb-3" onclick="document.getElementById('sidebar').classList.toggle('show')">☰ Menu</button>
+        <div id="mainView"></div>
     </div>
-
-    <div id="result-interface" class="hidden">
-        <h2>KẾT QUẢ: <span id="score-display" style="color:red; font-size: 2em"></span></h2>
-        <div id="result-details"></div>
-        <button id="btn-fix-mistakes" class="btn" style="background-color: #f39c12; margin-bottom: 10px; display: none;" onclick="cheDoSuaSai()">
-            Sửa sai - Grow Your Mind
-        </button>
-		<button class="btn" onclick="location.reload()">Làm đề khác</button>
-    </div>
-</div>
 
 <script>
-// --- CẤU HÌNH SLOGAN NGẪU NHIÊN ---
-    // Thầy thay nội dung 5 câu nói ở đây nhé:
-    const listSlogans = [
-        "Chăm học Toán - Sáng tương lai",
-        "Cách duy nhất để Học Toán là Làm Toán",
-        "Mỗi ngày học tập là một cơ hội để trở thành phiên bản tốt hơn của chính mình",
-        "Hãy học khi người khác ngủ, lao động khi người khác lười nhác, chuẩn bị khi người khác chơi bời và có được giấc mơ của mình khi mọi người chỉ ao ước.",
-        "Học tập giống như chèo thuyền ngược dòng, không tiến ắt sẽ lùi"
-    ];
+    // ===============================================================
+    // DÁN LINK API CỦA BẠN VÀO ĐÂY
+    const API_URL = "https://script.google.com/macros/s/AKfycbykuUiEuBtBWAV82C96_W4sNpD0scuyeGFdfskr29WiZA8e0ABPVwEcgN2Eo3cvRSA/exec"; 
+    // ===============================================================
 
-    // Tự động chọn 1 câu và hiển thị khi trang web tải xong
-    document.addEventListener("DOMContentLoaded", function() {
-        const randomSlogan = listSlogans[Math.floor(Math.random() * listSlogans.length)];
-        const sloganElement = document.getElementById('slogan-display');
-        if(sloganElement) sloganElement.innerText = randomSlogan;
-    });
-    // -----------------------------------
+    var RAW_DATA = {};
+    var PROCESSED_DATA = {}; 
+    var ALL_STUDENTS = {}; 
 
-    // --- HÀM CHUẨN HÓA HỌ TÊN TIẾNG VIỆT ---
-    function chuanHoaTen(str) {
-        // 1. Xóa khoảng trắng thừa ở đầu, cuối và giữa các từ
-        str = str.trim().replace(/\s+/g, ' ');
-        // 2. Chuyển tất cả về chữ thường, sau đó viết hoa chữ cái đầu mỗi từ
-        return str.toLowerCase().replace(/(^|\s)\S/g, function(l) { 
-            return l.toUpperCase(); 
-        });
+    // --- 1. LOAD DATA ---
+    function loadData() {
+        var pass = document.getElementById('adminPass').value;
+        document.getElementById('loginMsg').innerText = "Đang tải dữ liệu...";
+        fetch(API_URL, { method: 'POST', body: JSON.stringify({ type: 'get_admin_data', pass: pass }) })
+        .then(res => res.json()).then(onDataLoaded)
+        .catch(err => { document.getElementById('loginMsg').innerText = "Lỗi kết nối!"; console.error(err); });
     }
 
-    // --- THAY LINK API CỦA THẦY VÀO ĐÂY ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbwrijo6SO5gMM5u7Adr24IaUA7_UoDmb5GKHzNWABLZ-tIK1Fr6FyOpEmX_8Xa4h2pc/exec"; 
-    // ---------------------------------------
-
-    let currentExamConfig = {};
-    let currentExamQuestions = [];
-    let studentName = "";
-    let examCode = "";
-
-    function showLoader(show) { document.getElementById('loader').style.display = show ? 'block' : 'none'; }
-    function hideAll() {
-        document.getElementById('main-screen').style.display = 'none';
-        document.getElementById('login-admin').style.display = 'none';
-        document.getElementById('admin-panel').style.display = 'none';
-        document.getElementById('exam-interface').style.display = 'none';
-        document.getElementById('result-interface').style.display = 'none';
+    function onDataLoaded(res) {
+        if(res.error) { document.getElementById('loginMsg').innerText = res.error; return; }
+        RAW_DATA = res;
+        document.getElementById('subjectName').innerText = res.config.MON_HOC || "Hệ thống đánh giá";
+        document.getElementById('loginOverlay').classList.add('hidden');
+        res.students.forEach(s => { ALL_STUDENTS[s[0]] = { name: s[1], class: s[2], group: s[3] }; });
+        processDataETL();
+        renderSidebar();
+        renderOverview();
     }
 
-    async function vaoThi(event) {
-    // 1. LẤY ĐỐI TƯỢNG NÚT VÀ LƯU TRẠNG THÁI CŨ
-    const btn = event.target; 
-    const originalText = btn.innerHTML;
-
-    // --- XỬ LÝ HỌ TÊN THÔNG MINH ---
-    const nameInput = document.getElementById('hs-name');
-    let rawName = nameInput.value;
-    
-    let cleanName = chuanHoaTen(rawName);
-    
-    if (!cleanName || cleanName.split(' ').length < 2) {
-        alert("Vui lòng nhập đầy đủ Họ và Tên (Ví dụ: Nguyễn Văn An)");
-        nameInput.focus();
-        return;
-    }
-
-    nameInput.value = cleanName;
-    studentName = cleanName; 
-
-    const code = document.getElementById('exam-code').value.trim();
-    examCode = code; 
-
-    if (!studentName || !examCode) {
-        alert("Vui lòng nhập đủ Họ Tên và Mã đề!");
-        return;
-    }
-
-    // 2. ĐỔI GIAO DIỆN NÚT THÀNH LOADING
-    btn.disabled = true;
-    // Sử dụng class btn-loader mà bạn đã có sẵn trong CSS
-    btn.innerHTML = '<div class="btn-loader"></div> Đang tải đề...';
-
-    // Bỏ showLoader(true) cũ vì đã có loading tại nút
-    try {
-        const res = await fetch(`${API_URL}?action=get_exam&maDe=${examCode}&t=${Date.now()}`).then(r => r.json());
-        
-        if(res.status === 'error') { 
-            alert(res.msg); 
-            return; 
+    // --- 2. ETL ---
+    function processDataETL() {
+        var sessions = {};
+        function initGroup(s, g) {
+            if(!sessions[s]) sessions[s] = {};
+            if(!sessions[s][g]) sessions[s][g] = {
+                peerTotal: 0, peerCount: 0, selfTotal: 0, selfCount: 0,
+                reviewers: new Set(), selfReviewers: new Set(),
+                comments: { peer: [], self: [], members: [] },
+                membersPoints: {},
+                // Lưu tổng điểm từng tiêu chí
+                criteriaSums: { 
+                    peer: new Array(RAW_DATA.criteria.length).fill(0), 
+                    self: new Array(RAW_DATA.criteria.length).fill(0) 
+                }
+            };
         }
         
-        hideAll();
-        document.getElementById('exam-interface').style.display = 'block';
-        document.getElementById('exam-title-display').innerText = res.data.tenDe;
-        
-        currentExamConfig = res.data.config;
-        currentExamQuestions = res.data.cauHoi;
-        renderQuestions(res.data.cauHoi, res.data.config);
-
-    } catch(e) { 
-        console.error(e); 
-        alert("Lỗi kết nối hoặc không tìm thấy đề!"); 
-    } finally {
-        // 3. TRẢ LẠI TRẠNG THÁI NÚT BAN ĐẦU
-        // Lệnh trong finally luôn chạy kể cả khi fetch thành công hay thất bại
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-    }
-}
-
-    function renderQuestions(list, config) {
-        let html = '';
-        let p1_end = parseInt(config.p1_num);
-        let p2_end = p1_end + parseInt(config.p2_num);
-
-        list.forEach((c, i) => {
-            if (i === 0 && config.p1_num > 0) html += `<div class="section-header">PHẦN 1: TRẮC NGHIỆM (${config.p1_score}đ/câu)</div>`;
-            if (i === p1_end && config.p2_num > 0) html += `<div class="section-header">PHẦN 2: ĐÚNG/SAI (${config.p2_mode === 'chia_deu' ? 'Chia đều' : 'Bậc thang'})</div>`;
-            if (i === p2_end && config.p3_num > 0) {
-                html += `<div class="section-header">PHẦN 3: TRẢ LỜI NGẮN (${config.p3_score}đ/câu)</div>`;
-                html += `<div class="warning-box">⚠️ Lưu ý: Dùng dấu chấm để nhập số thập phân (Ví dụ: 2.5)</div>`;
-            }
-
-            html += `<div class="question-box"><span class="q-title">Câu ${c.id}:</span>`;
-
-            if(c.dang === 1) { 
-                html += `<div class="options-grid">`;
-                ['A','B','C','D'].forEach(opt => {
-                    html += `<label class="option-item"><span class="option-label">${opt}</span><input type="radio" name="c${i}" value="${opt}"></label>`;
+        function parseScore(jsonStr, type, groupObj) {
+            try {
+                var scores = JSON.parse(jsonStr); var total = 0;
+                // Cộng dồn điểm thô cho Chart
+                RAW_DATA.criteria.forEach((c, idx) => {
+                    var val = Number(scores['tc' + (idx+1)]) || 0;
+                    groupObj.criteriaSums[type][idx] += val;
                 });
-                html += `</div>`;
-            } 
-            else if(c.dang === 2) { 
-                html += `<div>`;
-                ['a','b','c','d'].forEach((y, yi) => {
-                    html += `<div class="matrix-row"><span class="matrix-label">Ý ${y}:</span> 
-                        <div class="tf-group">
-                            <label class="tf-item"><span class="tf-text">Đ</span><input type="radio" name="c${i}_${yi}" value="true"></label> 
-                            <label class="tf-item"><span class="tf-text">S</span><input type="radio" name="c${i}_${yi}" value="false"></label>
-                        </div></div>`;
+                // Tính điểm quy đổi
+                var groupScores = {};
+                RAW_DATA.criteria.forEach((c, idx) => {
+                    var val = Number(scores['tc' + (idx+1)]) || 0;
+                    if(!groupScores[c.group]) groupScores[c.group] = {act:0, max:0, w:c.weight};
+                    groupScores[c.group].act += val; groupScores[c.group].max += c.max;
                 });
-                html += `</div>`;
-            } 
-            else { 
-                html += `<input type="text" id="c${i}" autocomplete="off" placeholder="Nhập kết quả...">`;
-            }
-            html += `</div>`;
-        });
-        document.getElementById('questions-container').innerHTML = html;
+                for(var g in groupScores) { var info = groupScores[g]; if(info.max > 0) total += (info.act / info.max) * 10 * info.w; }
+                return total;
+            } catch(e) { return 0; }
+        }
+
+        RAW_DATA.peerResults.forEach(r => { initGroup(r[1], r[3]); var d=sessions[r[1]][r[3]]; d.peerTotal+=parseScore(r[4],'peer',d); d.peerCount++; d.reviewers.add(String(r[2])); if(r[5]) d.comments.peer.push(r[5]); });
+        RAW_DATA.selfResults.forEach(r => { initGroup(r[1], r[3]); var d=sessions[r[1]][r[3]]; d.selfTotal+=parseScore(r[4],'self',d); d.selfCount++; d.selfReviewers.add(String(r[2])); if(r[5]) d.comments.self.push(r[5]); if(r[6]) d.comments.members.push(r[6]); });
+        RAW_DATA.contribResults.forEach(r => { initGroup(r[1], r[3]); var d=sessions[r[1]][r[3]]; if(!d.membersPoints[r[4]]) d.membersPoints[r[4]]=[]; d.membersPoints[r[4]].push(Number(r[5])); });
+        PROCESSED_DATA = sessions;
     }
 
-    async function nopBai() {
-        if(!confirm("Bạn muốn nộp bài? Chờ 3 giây để xem kết quả!")) return;
-        // 1. LẤY NÚT VÀ KHÓA NÚT LẠI NGAY LẬP TỨC
-        const btnSubmit = document.querySelector('#exam-interface .btn'); 
-        const originalText = btnSubmit.innerHTML; // Lưu lại chữ "NỘP BÀI" cũ
-        
-        // Đổi giao diện nút -> Đang loading
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<div class="btn-loader"></div> Đang chấm điểm...';
-
-	// 2. Thu thập dữ liệu bài làm (Giữ nguyên logic cũ)
-        let baiLam = [];
-        currentExamQuestions.forEach((c, i) => {
-            if(c.dang === 1) {
-                const el = document.querySelector(`input[name="c${i}"]:checked`);
-                baiLam.push(el ? el.value : "");
-            } else if(c.dang === 2) {
-                let ans = [];
-                for(let j=0; j<4; j++) {
-                    const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
-                    ans.push(el ? (el.value === 'true') : null);
-                }
-                baiLam.push(ans);
-            } else {
-                let val = document.getElementById(`c${i}`).value.replace(',', '.');
-                baiLam.push(val);
-            }
-        });
-        // 3. Gửi dữ liệu đi
-        showLoader(true);
-        const formData = new FormData();
-        formData.append('action', 'submit_exam');
-        formData.append('maDe', examCode);
-        formData.append('tenHS', studentName);
-        formData.append('baiLam', JSON.stringify(baiLam));
-
-        try {
-            const res = await fetch(API_URL, { method: 'POST', body: formData }).then(r => r.json());
-            showLoader(false);
-            // Nếu lỗi thì mở lại nút để nộp lại
-            if(res.status === 'error') { 
-                alert(res.msg); 
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = originalText;
-                return; 
-            }
-
-// ... (Phần trên giữ nguyên) ...
-            
-            hideAll();
-            document.getElementById('result-interface').style.display = 'block';
-			// --- ĐOẠN CODE MỚI THÊM: XỬ LÝ NÚT SỬA SAI ---
-            window.ketQuaChiTiet = res.chiTiet; // Lưu kết quả lại để dùng
-            // Nếu điểm < 10 (tức là có câu sai) thì hiện nút Sửa sai
-            if (res.diem < (currentExamConfig.p1_num * currentExamConfig.p1_score + currentExamConfig.p2_num * 1 + currentExamConfig.p3_num * currentExamConfig.p3_score)) { 
-                 document.getElementById('btn-fix-mistakes').style.display = 'block';
-            } else {
-                 document.getElementById('btn-fix-mistakes').style.display = 'none';
-            }
-            // ---------------------------------------------
-			
-            document.getElementById('score-display').innerText = res.diem.toFixed(2);
-            
-            // --- PHẦN MỚI: HIỂN THỊ LỜI NHẮN ĐỘNG VIÊN ---
-            const diem = res.diem;
-            const ten = studentName.split(' ').pop(); // Lấy tên (ví dụ "Nguyễn Văn A" -> "A")
-            let msg = "";
-            let msgClass = "";
-
-           // Ngân hàng lời nhắn
-            const msgList = {
-                lv1: ["Vạn sự khởi đầu nan 🌱, đừng nản chí {ten} nhé! 💪", "Thất bại là mẹ thành công 🐣, cố lên {ten} ơi! 🚀", "Cần ôn kỹ lại lý thuyết nha {ten} 📚, em sẽ tiến bộ nhanh thôi! 💪", "Đừng buồn nhé {ten} 🤗, lần sau chắc chắn sẽ tốt hơn nhiều! 🌈", "Cố gắng hơn chút nữa nhé {ten} 💪, mỗi lần thử là một bước tiến rồi! 🏃", "{ten} ơi, điểm lần này giống Einstein lúc nhỏ lắm 😄, ông ấy từng bị cho là “chậm hiểu” mà sau thay đổi cả thế giới! Cố lên nhé!️", "Nobita cũng hay được điểm kiểu này nè {ten} à 😂, nhưng cậu ấy vẫn có bạn bè và thầy cô giúp, em cũng thế. Cố lên nhé!️💪"],
-                lv2: ["Đã có cố gắng 👍, nhưng cần tập trung hơn nha {ten} ⚡", "Cẩn thận hơn chút nữa nhé {ten} 📝, phong độ sẽ lên nhanh thôi 😉", "Cẩn thận hơn xíu nữa là điểm cao ngay thôi {ten} ơi 🎯", "Ôn luyện bài tập cơ bản nhiều hơn nhé {ten} 📚", "Tiếp tục nỗ lực nhé {ten} 💪, sắp chạm mốc Khá rồi 🌻", "{ten} ơi, điểm lần này giống Einstein lúc nhỏ lắm 😄, ông ấy từng bị cho là “chậm hiểu” mà sau thay đổi cả thế giới! Cố lên nhé!️", "Nobita cũng hay được điểm kiểu này nè {ten} à 😂, nhưng cậu ấy vẫn có bạn bè và thầy cô giúp, em cũng thế. Cố lên nhé!️ 💪"],
-                lv3: ["Kết quả khá đó 👏, phát huy và cố gắng lên nhé {ten}! 😉", "Nền tảng khá ổn rồi 👏, {ten} cố gắng luyện đề nhiều hơn nha 🔥", "Sắp giỏi rồi 🌟, cố thêm chút nữa nào {ten} 🚴", "Điểm này cho thấy {ten} đã nắm được kiến thức cơ bản 👍. Tiếp tục cố gắng nhé! 🌈", "Khá ổn đó {ten} 😎, lần sau mục tiêu 8+ nhé! 💪", "{ten} à, Steve Jobs thời cấp ba cũng chỉ ở mức này 🙌, rồi tạo ra 🍎 Apple thay đổi thế giới! Cố lên nhé!️", "{ten} ơi, J.K. Rowling từng bị từ chối nhiều lần 😊, nhưng vẫn viết nên 📚 Harry Potter bán hàng tỷ cuốn! Cố lên nhé!️"],
-                lv4: ["Kết quả ổn đó 👏, chúc mừng {ten} vì sự tiến bộ này! 🎉", "Rất đáng khen 👏, {ten} giữ vững phong độ nhé 😉", "Điểm số đẹp 🌟, chúc mừng {ten}! Tiếp tục phát huy nhé! 🚀", "{ten} ơi, chỉ cần cẩn thận chút xíu nữa là chạm mốc cao hơn rồi! 🔥", "{ten} đang học rất hiệu quả 🔥, cố gắng giữ nhịp này nha! 😎", "Giống Albert Einstein thời trung học lắm {ten} à 👓, ông ấy học khá thôi nhưng thành huyền thoại rồi! Cố lên nhé!️", "{ten} ơi, điểm cao giống Leonardo da Vinci thời trẻ luôn á 🎨 Cố lên nhé!️"],
-                lv5: ["Một bài làm chất lượng cao 🌟, tiếp tục giữ phong độ nhé {ten}! 🚀", "Kiến thức của {ten} khá vững rồi 🌈, chúc mừng em! 👏", "Chỉ thiếu chút xíu nữa là điểm tuyệt đối rồi {ten} ơi 🤩", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 👏", "Phong độ đỉnh chóp 👍, tiếp tục thế này nhé {ten}! 🌟", "Điểm đẹp như thời Stephen Hawking học đại học {ten} ơi 🌠, ông ấy giỏi và truyền cảm hứng cho cả thế giới!", "{ten} à, Marie Curie cũng ở mức này trước khi đoạt Nobel 🙆‍️, tiếp tục phát huy nhé! 🏆"],
-                lv6: ["ĐỈNH CHÓP! 💯 {ten} là niềm tự hào của cả lớp! 😍", "Quá xịn rồi {ten} 🎉, đúng chuẩn học sinh gương mẫu! 👍", "Đỉnh của chóp! 👍 Chúc mừng {ten} nhé 🎉", "Kết quả rất ấn tượng 🤩, 10 điểm tròn trịa cho sự nỗ lực của {ten} 🎉", "Tuyệt vời ông mặt trời! 🌞 Chúc mừng {ten}! 🎉", "Điểm cao đúng chuẩn “Elon Musk thời đi học” luôn 🚀, hãy tiếp tục chinh phục vũ trụ kiến thức {ten} nhé! 🌌", "Mức điểm này như của Bill Gates sáng lập Microsoft {ten} ơi 💰, tiếp tục phát huy nhé! ✨"]
-            };
-
-            // Chọn nhóm lời nhắn
-            let selectedArr = [];
-            if (diem < 4) { selectedArr = msgList.lv1; msgClass = "fb-low"; }
-            else if (diem < 6) { selectedArr = msgList.lv2; msgClass = "fb-mid"; }
-            else if (diem < 7) { selectedArr = msgList.lv3; msgClass = "fb-mid"; }
-            else if (diem < 8) { selectedArr = msgList.lv4; msgClass = "fb-high"; }
-            else if (diem <= 9) { selectedArr = msgList.lv5; msgClass = "fb-high"; } // Sửa 8-9 bao gồm cả 9
-            else { selectedArr = msgList.lv6; msgClass = "fb-high"; }
-
-            // Random lời nhắn và thay tên
-            let randomMsg = selectedArr[Math.floor(Math.random() * selectedArr.length)];
-            msg = randomMsg.replace("{ten}", ten);
-
-            // Chèn vào giao diện (Thêm thẻ div feedback nếu chưa có)
-            let resultContainer = document.getElementById('result-interface');
-            let feedbackDiv = document.getElementById('feedback-msg');
-            if (!feedbackDiv) {
-                feedbackDiv = document.createElement('div');
-                feedbackDiv.id = 'feedback-msg';
-                // Chèn ngay dưới điểm số (score-display nằm trong h2)
-                resultContainer.insertBefore(feedbackDiv, document.getElementById('result-details'));
-            }
-            feedbackDiv.className = `feedback-msg ${msgClass}`;
-            feedbackDiv.innerHTML = `<strong>Lời Thầy nhắn:</strong><br>"${msg}"`;
-
-            // --- PHẦN MỚI: HIỂN THỊ MEME VUI ---
-            // Kho meme (URL trực tiếp, load nhanh, tôi chọn meme vui, tích cực, phù hợp học sinh)
-            const memeList = {
-                low: [ // Dưới 6 điểm (lv1 + lv2)
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUya3V4NDA5bjJmNjIwaDlla2J0bTM2b3VteWoxYnA2eTdoZDEweDdvZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yoJC2K6rCzwNY2EngA/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycWZuZTdnaWJjYXl1a3I4a2N6YnppanYyY25ucW91Y2Y1bDl3M3A4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/h99SOT2cABIUE/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycDdtZnN6eDI4bWpyanU5MjIxNWh2enNwaXdzaHAzZG1iaW9qa2d4NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2uh5yKKmZjDFUy2DOM/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyNDdxZnhiamQ1Mm9ycmFuMmNnMG5pZ2xnbHlpemU5NDlmeTl2bm10aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tBWTS5iya1Nkh1uiB9/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyZ2diOW9rOGtyODFlaXdueDI0N2E5dnU1YzkzczJjcGdydnViNGoxcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jJ2zMk9eXoht2VFxEV/giphy.gif",
-				   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZ2kzcTU1OWVvdTNibmVkbzcyOHpybWI1Y2pzcHJqdzBxenphOW1vYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1hXY6iNdTFpTW4je85/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyempoMDdxNzVhOW9wZjBjNXpqbTY4NTc4eXoweThyYWwzdmd1cmRrZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6XX4V0O8a0xdS/giphy.gif",
-				   "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2Z5MTFyZHVwOXFubGM5c2N6bjdoYng4cjd3YnAzcGY2Yzg5bnVvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NgTGoJN7UejpeA8Zby/giphy.gif",
-				   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyOHl3b251ZmtuODBnNWJqajQ5anNoOGNmbHhreTFrajZpYTNzM3BqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6nUQzWnaMz1cDrmo/giphy.gif"
-                ],
-                lv3: [ // 6-7 điểm: khá tốt, cố thêm chút
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyanhxbzBja3Zjb3V3em9mM3NzdjhobWFoYnV0MXJlejl4OGpkanc2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IQHTtgvQyHuEi5Epkq/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUya3V4NDA5bjJmNjIwaDlla2J0bTM2b3VteWoxYnA2eTdoZDEweDdvZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yoJC2K6rCzwNY2EngA/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyOHl3b251ZmtuODBnNWJqajQ5anNoOGNmbHhreTFrajZpYTNzM3BqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6nUQzWnaMz1cDrmo/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMm9uYmVwdmMwbTQyZmNud3EyYmpnNTZ3MnJjdG4yb2RjcXBmZGF1byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Xq3vAx5aX0gaifRAsk/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyNDdxZnhiamQ1Mm9ycmFuMmNnMG5pZ2xnbHlpemU5NDlmeTl2bm10aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tBWTS5iya1Nkh1uiB9/giphy.gif",
-				   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZ2kzcTU1OWVvdTNibmVkbzcyOHpybWI1Y2pzcHJqdzBxenphOW1vYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1hXY6iNdTFpTW4je85/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyempoMDdxNzVhOW9wZjBjNXpqbTY4NTc4eXoweThyYWwzdmd1cmRrZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6XX4V0O8a0xdS/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMmkzczBldDl4ZXFrcXo3cWM0aHdkdzV4eWlid204cmxuazNjdHgxZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUA7b1otxlfgvqZGJq/giphy.gif",
-				   "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2Z5MTFyZHVwOXFubGM5c2N6bjdoYng4cjd3YnAzcGY2Yzg5bnVvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NgTGoJN7UejpeA8Zby/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyZ2diOW9rOGtyODFlaXdueDI0N2E5dnU1YzkzczJjcGdydnViNGoxcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jJ2zMk9eXoht2VFxEV/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyOTdsZXF1c291eW1qczF6OW9nbGxteXEzbXExejcyNnJjN3plZzFkeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FemTGpEZeK27M5fKL4/giphy.gif",
-                   "https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyMThpZjIydHprZTAwZ3J2NXJ3YWZ3MGdka3ZuMDdmemlqNTkzOTdkayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUn3C8WqEzUEeQoRa0/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycDdtZnN6eDI4bWpyanU5MjIxNWh2enNwaXdzaHAzZG1iaW9qa2d4NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/2uh5yKKmZjDFUy2DOM/giphy.gif"
-                ],
-                lv4: [ // 7-8 điểm: rất tốt, success!
-                   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXE3cWF6Mm91dTRnaHRwa3RlZ2Jwa3czcms1YTdsYjBxOWpvc3M2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tIeCLkB8geYtW/giphy.gif",  // Cuu like
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMm9uYmVwdmMwbTQyZmNud3EyYmpnNTZ3MnJjdG4yb2RjcXBmZGF1byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Xq3vAx5aX0gaifRAsk/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUycG85c3ZveDQxbHhqeHNicTBkaXI1aGV1azY4Y3lmemppZ2V4YmZ2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gnNxCUUzGiKuYnLxJN/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyNDdxZnhiamQ1Mm9ycmFuMmNnMG5pZ2xnbHlpemU5NDlmeTl2bm10aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tBWTS5iya1Nkh1uiB9/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyOTdsZXF1c291eW1qczF6OW9nbGxteXEzbXExejcyNnJjN3plZzFkeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FemTGpEZeK27M5fKL4/giphy.gif",
-                   "https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyMThpZjIydHprZTAwZ3J2NXJ3YWZ3MGdka3ZuMDdmemlqNTkzOTdkayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUn3C8WqEzUEeQoRa0/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyaXpyYnkxbWxqZnp3ajJ2Z2M0N25uMDZiZWJwNWt2cGpsNGJyNG5uayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9H279yb0blggo/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyMjBxb2pvcHhqdHE0bHN5dzJxbm83Nnljcm05cTF2OWc1b3E1cWM1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/x0yxQpWV9gPMRHnw7u/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUybzV1MHB2Nm5uY2c5bXExc3N6MWZiaGRzb28weXo1a3F0eHoya2NweCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YJ09hqJCLme4g/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUycHhtZjdzbWFzZDB2NXZ4MXY3azhycHdoZmkzeGhmNnRxempmOGI3dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wvrn7MMemcOB2/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyY2c3ZWVmNzY3amFmenJrNGg4NGoycTkwcHUzb3A0dmxjZGxhbnEzMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PhR99fbNjhAAzopGnm/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXV0c3VwendhMmJ5ajZpcDV0MHY5ZWUyYW5qMHM0a3V3N2w4cm1rMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tnMUXTkYUWKe1dasNJ/giphy.gif"
-                ],
-                lv5: [ // 8-9 điểm: giỏi lắm, smart!
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUycG85c3ZveDQxbHhqeHNicTBkaXI1aGV1azY4Y3lmemppZ2V4YmZ2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gnNxCUUzGiKuYnLxJN/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2t3MjAxODMwMTFoYnZoN3MyamlyNHFocTVvM2lzMDMxNjhxbGtsciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3NtY188QaxDdC/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyancxNHF6ZnpkdWZlajdjYTh2d2xiczk2cXR4NTV3NnV3YnJzeHpuYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Swx36wwSsU49HAnIhC/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNGF2djhjdGFsZmllYzFpYWFsZnc2NHEweTk2dTFtNTl1ZTY4bzlndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/50YgxbPnjA1LG/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyNnVvZncxZ2hocmExZnRjbDc5YTB4aDk4b2tlZGpnYTVtem84aTgxOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/s54cTulj6JbU0GOGg4/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZWNocjdjbWp4bmRlaXczNGE3ZXNmNTdrdXh3MzJxYzhpbGppN25keiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Only6nbYqnhVcIaHO7/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZWNocDNidG4wZGt3N201Y25rbHVyazNmbm9tNHNsdW4zNnBjeXlndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AlQwFJLmBwVrJ2DFn3/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyY2c3ZWVmNzY3amFmenJrNGg4NGoycTkwcHUzb3A0dmxjZGxhbnEzMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PhR99fbNjhAAzopGnm/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyeTNiMnNpejlkOG9qNzV0Z3Q2azZ0bjdiZjIzbG9naDdpd3dqeW1xYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Q66ZEIpjEQddUOOKGW/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyb28xOGprZmJxeG5rYjV2dzV5bGVpZTEyZ2VlMzVkMnYyeXM1N3VrbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7absbD7PbTFQa0c8/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUydDFpMm1oanluNjJmcm1pb2pydzg2OWRvYzh2NnZ6ZXdsaTF4anFvNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/t3sZxY5zS5B0z5zMIz/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUybnc5NWwxYTNzc2Y4bnNrbm8xanp4MDdwZm1sY3BnMDB2NmF5NTc5ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BWD3CtcudWL28/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyMmkzczBldDl4ZXFrcXo3cWM0aHdkdzV4eWlid204cmxuazNjdHgxZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUA7b1otxlfgvqZGJq/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyaW4xZTRoMnB1aTdxYWhuamhnbW1taGF1NGVpdWIybG5yM2JldXEzbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AWTJeBx5MiEoEqDFIr/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUybzV1MHB2Nm5uY2c5bXExc3N6MWZiaGRzb28weXo1a3F0eHoya2NweCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YJ09hqJCLme4g/giphy.gif",
-				   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXE3cWF6Mm91dTRnaHRwa3RlZ2Jwa3czcms1YTdsYjBxOWpvc3M2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tIeCLkB8geYtW/giphy.gif",
-				   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyZzA3eW4zam9nMDNnOHo2cDNxOWtwcno5MXlhemZjanljNDZjd2dlcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hflpSaYuR8xK8/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyMnk4NnAwc2JnZGNkd3F4NmV0eDIyYTYwZWY4eXdzb3NwMzVtMnl5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUjSOWCndCdECCyOEY/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE2c2x5OGpoam5wMHMzbGh0bHNuZTY1eHc2ajVqZTIzOXhsNnEzeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qAmdxxyQ4XTt3KGt3c/giphy.gif"
-                ],
-                lv6: [ // Trên 9 điểm: đỉnh chóp, epic win!
-                   "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUycG85c3ZveDQxbHhqeHNicTBkaXI1aGV1azY4Y3lmemppZ2V4YmZ2eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gnNxCUUzGiKuYnLxJN/giphy.gif",
-                   "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2t3MjAxODMwMTFoYnZoN3MyamlyNHFocTVvM2lzMDMxNjhxbGtsciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3NtY188QaxDdC/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyNGF2djhjdGFsZmllYzFpYWFsZnc2NHEweTk2dTFtNTl1ZTY4bzlndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/50YgxbPnjA1LG/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyaWwzcTJoNWM0MHJrc2hobWN4ZHlpbW5pNjJkcGh1b3dkMTdpeWNmMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/nbvFVPiEiJH6JOGIok/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyMnk4NnAwc2JnZGNkd3F4NmV0eDIyYTYwZWY4eXdzb3NwMzVtMnl5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUjSOWCndCdECCyOEY/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyc2IyNnBuMms2OXlwMTZuejY2YjY0b2ZqM2lwM3Ixc2p6eGxueGYxdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cdXpgeB32BekIGzBNh/giphy.gif",
-                   "https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyMmwzcHY3am03eGRlaTQzbXNua2drbTdpZmVtaDFyODBjejlmeWZ0eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bb1PFnM9zHnR3Ns3tG/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXV0c3VwendhMmJ5ajZpcDV0MHY5ZWUyYW5qMHM0a3V3N2w4cm1rMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tnMUXTkYUWKe1dasNJ/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyb28xOGprZmJxeG5rYjV2dzV5bGVpZTEyZ2VlMzVkMnYyeXM1N3VrbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7absbD7PbTFQa0c8/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyeTNiMnNpejlkOG9qNzV0Z3Q2azZ0bjdiZjIzbG9naDdpd3dqeW1xYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Q66ZEIpjEQddUOOKGW/giphy.gif",
-				   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyZzA3eW4zam9nMDNnOHo2cDNxOWtwcno5MXlhemZjanljNDZjd2dlcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hflpSaYuR8xK8/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyMjBxb2pvcHhqdHE0bHN5dzJxbm83Nnljcm05cTF2OWc1b3E1cWM1NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/x0yxQpWV9gPMRHnw7u/giphy.gif",
-                   "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyaW4xZTRoMnB1aTdxYWhuamhnbW1taGF1NGVpdWIybG5yM2JldXEzbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AWTJeBx5MiEoEqDFIr/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUybnc5NWwxYTNzc2Y4bnNrbm8xanp4MDdwZm1sY3BnMDB2NmF5NTc5ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BWD3CtcudWL28/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUydDFpMm1oanluNjJmcm1pb2pydzg2OWRvYzh2NnZ6ZXdsaTF4anFvNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/t3sZxY5zS5B0z5zMIz/giphy.gif",
-                   "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzVvOHVoc3FocHlrcGppdTJpcGxpZ3Q3ZjFkdm5ycXU5Y2dpdDI2MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KhdCldraGlzwqTc4Vb/giphy.gif",
-                   "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpzNXp2ZjIxZzliOWNrOXpkdHR2NzZoNHZwOGQ0Y3I5eG13OXBrcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/r1d69SdEpcxmhzlHd1/giphy.gif"
-                ]
-            };
-
-            // Xác định level meme
-            let selectedMemeArr = [];
-            if (diem < 6) {
-                selectedMemeArr = memeList.low;
-            } else if (diem < 7) {
-                selectedMemeArr = memeList.lv3;
-            } else if (diem < 8) {
-                selectedMemeArr = memeList.lv4;
-            } else if (diem <= 9) {
-                selectedMemeArr = memeList.lv5;
-            } else {
-                selectedMemeArr = memeList.lv6;
-            }
-
-           // Luôn hiển thị nút nếu có meme (tất cả level đều có)
-            let memeContainer = document.getElementById('meme-container');
-            if (!memeContainer) {
-                memeContainer = document.createElement('div');
-                memeContainer.id = 'meme-container';
-                memeContainer.style.display = 'none';  // Ẩn ban đầu
-                memeContainer.style.marginTop = '20px';
-                memeContainer.style.textAlign = 'center';  // Căn giữa meme
-                feedbackDiv.insertAdjacentElement('afterend', memeContainer);
-            }
-
-            // Đảm bảo khu vực nút cũng center (thêm text-align center cho feedbackDiv nếu chưa có)
-            feedbackDiv.style.textAlign = 'center';  // Thêm dòng này để nút và text center
-
-            let memeButton = document.getElementById('meme-button');
-            if (!memeButton) {
-                memeButton = document.createElement('button');
-                memeButton.id = 'meme-button';
-                memeButton.textContent = '👉🎁😉';
-
-                // Style cho nút - quay lại kích thước bạn muốn
-                memeButton.style.marginTop = '15px';
-                memeButton.style.padding = '8px 12px';     // Như bạn yêu cầu
-                memeButton.style.fontSize = '18px';         // Chữ 16px
-                memeButton.style.background = '#bef7f5';    // Màu nền xanh ngọc
-                memeButton.style.color = '#333333';         // Màu chữ
-                memeButton.style.border = 'none';
-                memeButton.style.borderRadius = '12px';
-                memeButton.style.cursor = 'pointer';
-                memeButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-                
-                // QUAN TRỌNG: Các style để căn giữa hoàn hảo
-                memeButton.style.display = 'block';         // Đổi thành block để margin auto hoạt động
-                memeButton.style.marginLeft = 'auto';       // Căn giữa ngang
-                memeButton.style.marginRight = 'auto';      // Căn giữa ngang
-
-                feedbackDiv.insertAdjacentElement('afterend', memeButton);
-
-                memeButton.addEventListener('click', function() {
-                    const randomMeme = selectedMemeArr[Math.floor(Math.random() * selectedMemeArr.length)];
-                    memeContainer.innerHTML = `<img src="${randomMeme}" alt="Meme vui" loading="lazy" class="meme-img">`;
-                    memeContainer.style.display = 'block';
-                    memeButton.style.display = 'none';
-
-                    setTimeout(() => {
-                        const img = memeContainer.querySelector('img');
-                        if (img) img.style.opacity = '1';
-                    }, 100);
-                });
-            }
-			
-			// HIỆU ỨNG PHÁO HOA (Nếu điểm >= 8)
-            if (diem >= 8) {
-                var duration = 3 * 1000;
-                var animationEnd = Date.now() + duration;
-                var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-                var interval = setInterval(function() {
-                    var timeLeft = animationEnd - Date.now();
-                    if (timeLeft <= 0) { return clearInterval(interval); }
-                    var particleCount = 50 * (timeLeft / duration);
-                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-                }, 250);
-            }
-            // Hàm phụ trợ cho pháo hoa
-            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-            
-            // ----------------------------------------------
-
-            // Render chi tiết (Giữ nguyên phần cũ)
-            let html = '';
-            // ... (Phần hiển thị chi tiết câu hỏi giữ nguyên như cũ)
-            res.chiTiet.forEach((item, idx) => {
-                let userChoice = baiLam[idx];
-                let isCorrect = (item.diem > 0); 
-                let color = isCorrect ? 'green' : 'red';
-                let style = `border-bottom:1px solid #eee; padding:15px; background: ${isCorrect ? '#f0fff4' : '#fff5f5'}`;
-                
-                html += `<div style="${style}"><strong>Câu ${item.cau}:</strong> <span style="color:${color}; font-weight:bold">+${item.diem}</span>`;
-                
-                if (Array.isArray(item.ketQua)) { 
-                     let visual = item.ketQua.map(k => k ? '✅' : '❌').join(' ');
-                     let userText = userChoice.map(u => u===true?'Đ':(u===false?'S':'_')).join('-');
-                     html += `<br>Kết quả: ${visual} (Chọn: ${userText})`;
-                } else {
-                    html += `<br>Kết quả: ${item.ketQua === 'Đúng' ? 'Đúng' : 'Sai'} (Bạn chọn: <b>${userChoice || 'Trống'}</b>)`;
-                }
-                html += `</div>`;
+    // --- 3. RENDER SIDEBAR ---
+    function renderSidebar() {
+        var container = document.getElementById('dynamicMenu'); container.innerHTML = "";
+        Object.keys(PROCESSED_DATA).sort().forEach(s => {
+            var header = document.createElement('div'); header.className = 'session-header'; header.innerText = 'BUỔI ' + s; container.appendChild(header);
+            Object.keys(PROCESSED_DATA[s]).sort((a,b)=>a-b).forEach(g => {
+                var item = document.createElement('div'); item.className = 'nav-link'; item.innerHTML = `<i class="bi bi-people-fill me-2"></i> Nhóm ${g}`;
+                item.onclick = function() { setActiveLink(this); renderGroupDetail(s, g); }; container.appendChild(item);
             });
-            document.getElementById('result-details').innerHTML = html;
-			window.scrollTo(0, 0);
+        });
+    }
+    function setActiveLink(el) { document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); el.classList.add('active'); }
 
-        } catch(e) { 
-            alert("Lỗi nộp bài! Vui lòng kiểm tra mạng."); 
-            console.error(e);
-            // Mở lại nút nếu lỗi mạng
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = originalText;
-        }
+    // --- 4. TÍNH NĂNG TÍNH ĐIỂM ---
+    function renderCalculationTool() {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.nav-link')[1].classList.add('active'); // Active nút tính điểm
+
+        var maxSession = Number(RAW_DATA.config.SO_BUOI) || 2;
+        var sessionOpts = "";
+        for(var i=1; i<=maxSession; i++) sessionOpts += `<option value="${i}">Buổi ${i}</option>`;
+
+        var html = `<h3 class="mb-4 fw-bold text-dark"><i class="bi bi-calculator"></i> CÔNG CỤ TÍNH ĐIỂM</h3><ul class="nav nav-tabs mb-3" id="calcTabs"><li class="nav-item"><a class="nav-link active fw-bold" href="#" onclick="switchTab(1)">ĐIỂM THÀNH PHẦN</a></li><li class="nav-item"><a class="nav-link fw-bold" href="#" onclick="switchTab(2)">TỔNG KẾT CUỐI KỲ</a></li></ul><div id="tabSession"><div class="d-flex align-items-center mb-3"><span class="me-2 fw-bold">Chọn buổi:</span><select id="calcSessionSelect" class="form-select w-auto me-3" onchange="calcSessionScore()">${sessionOpts}</select><button class="btn btn-success" onclick="exportExcel('tblSessionScore', 'Diem_Thanh_Phan')"><i class="bi bi-file-earmark-excel"></i> Xuất Excel</button></div><div class="table-responsive bg-white shadow-sm p-3 rounded"><table class="table table-bordered table-cal table-hover" id="tblSessionScore"><thead><tr><th>Buổi</th><th>Nhóm</th><th>Mã SV</th><th>Họ Tên</th><th>Điểm Peer</th><th>Điểm Self</th><th>Điểm Nhóm</th><th>Đóng Góp</th><th>ĐIỂM CÁ NHÂN</th></tr></thead><tbody id="tbodySession"></tbody></table></div></div><div id="tabFinal" class="hidden"><div class="mb-3"><button class="btn btn-primary" onclick="calcFinalScore()"><i class="bi bi-arrow-repeat"></i> Tính toán lại</button><button class="btn btn-success ms-2" onclick="exportExcel('tblFinalScore', 'Bang_Diem_Tong_Ket')"><i class="bi bi-file-earmark-excel"></i> Xuất Excel</button></div><div class="table-responsive bg-white shadow-sm p-3 rounded"><table class="table table-bordered table-cal table-hover" id="tblFinalScore"><thead><tr id="trFinalHeader"></tr></thead><tbody id="tbodyFinal"></tbody></table></div></div>`;
+        document.getElementById('mainView').innerHTML = html;
+        calcSessionScore();
     }
 
-    // --- GIÁO VIÊN ---
-    function showLoginAdmin() { hideAll(); document.getElementById('login-admin').style.display = 'block'; }
-
-    async function loginAdmin() {
-        const pass = document.getElementById('admin-pass').value;
-        showLoader(true);
-        const formData = new FormData();
-        formData.append('action', 'admin_login');
-        formData.append('pass', pass);
-        const res = await fetch(API_URL, { method: 'POST', body: formData }).then(r => r.json());
-        showLoader(false);
-        if(res.status === 'ok') { hideAll(); document.getElementById('admin-panel').style.display = 'block'; } 
-        else { alert(res.msg); }
+    function switchTab(tabId) {
+        if(tabId==1) { document.getElementById('tabSession').classList.remove('hidden'); document.getElementById('tabFinal').classList.add('hidden'); document.querySelectorAll('#calcTabs .nav-link')[0].classList.add('active'); document.querySelectorAll('#calcTabs .nav-link')[1].classList.remove('active'); } 
+        else { document.getElementById('tabSession').classList.add('hidden'); document.getElementById('tabFinal').classList.remove('hidden'); document.querySelectorAll('#calcTabs .nav-link')[0].classList.remove('active'); document.querySelectorAll('#calcTabs .nav-link')[1].classList.add('active'); calcFinalScore(); }
     }
 
-    async function luuDeThi(event) {
-    // 1. LẤY ĐỐI TƯỢNG NÚT VÀ LƯU TRẠNG THÁI CŨ
-    const btn = event.target; 
-    const originalText = btn.innerHTML;
-
-    // 2. THU THẬP DỮ LIỆU (Giữ nguyên logic của bạn)
-    const ma = document.getElementById('new-exam-code').value.trim();
-    const ten = document.getElementById('new-exam-name').value.trim();
-    const cfg = {
-        p1_num: parseInt(document.getElementById('cfg-p1-num').value) || 0,
-        p1_score: parseFloat(document.getElementById('cfg-p1-score').value) || 0,
-        p2_num: parseInt(document.getElementById('cfg-p2-num').value) || 0,
-        p2_mode: document.getElementById('cfg-p2-mode').value,
-        p3_num: parseInt(document.getElementById('cfg-p3-num').value) || 0,
-        p3_score: parseFloat(document.getElementById('cfg-p3-score').value) || 0
-    };
-    const raw = document.getElementById('exam-data-input').value;
-
-    // Kiểm tra đầu vào
-    if(!ma || !ten || !raw) return alert("Vui lòng nhập đủ thông tin!");
-
-    // Xử lý tách dòng đáp án
-    let lines = raw.split('\n').filter(l => l.trim() !== "");
-    let dapAn = [];
-    let totalQ = cfg.p1_num + cfg.p2_num + cfg.p3_num;
-    let currentLine = 0;
-    
-    function parseLine(line) { 
-        let dot = line.indexOf('.'); 
-        return dot === -1 ? line.trim() : line.substring(dot+1).trim(); 
-    }
-
-    for(let i=0; i<cfg.p1_num; i++) {
-        if(currentLine >= lines.length) break;
-        dapAn.push({id: i+1, dang: 1, dapAn: parseLine(lines[currentLine++]).toUpperCase()});
-    }
-    for(let i=0; i<cfg.p2_num; i++) {
-        if(currentLine >= lines.length) break;
-        let arr = parseLine(lines[currentLine++]).split('').map(c => c.toUpperCase() === 'Đ');
-        dapAn.push({id: dapAn.length+1, dang: 2, dapAn: arr, soY: 4});
-    }
-    for(let i=0; i<cfg.p3_num; i++) {
-        if(currentLine >= lines.length) break;
-        dapAn.push({id: dapAn.length+1, dang: 3, dapAn: parseFloat(parseLine(lines[currentLine++]).replace(',', '.'))});
-    }
-
-    if (dapAn.length !== totalQ) {
-        if(!confirm(`Cấu hình ${totalQ} câu nhưng đọc được ${dapAn.length} dòng. Lưu không?`)) return;
-    }
-
-    // 3. BẮT ĐẦU QUÁ TRÌNH GỬI DỮ LIỆU
-    const payload = { maDe: ma, tenDe: ten, dapAn: dapAn, config: cfg };
-    const formData = new FormData();
-    formData.append('action', 'save_exam');
-    formData.append('data', JSON.stringify(payload));
-
-    // ĐỔI GIAO DIỆN NÚT THÀNH LOADING (Thay cho showLoader hệ thống)
-    btn.disabled = true;
-    btn.innerHTML = '<div class="btn-loader"></div> Đang lưu...';
-
-    try {
-        const response = await fetch(API_URL, { method: 'POST', body: formData });
-        const result = await response.json(); // Giả sử API trả về JSON
-
-        if(result.status === 'success' || response.ok) {
-            alert("Lưu thành công! Bạn có thể tắt trang hoặc tạo đề khác.!");
-        } else {
-            alert("Có lỗi xảy ra: " + (result.msg || "Không xác định"));
-        }
-    } catch(e) {
-        console.error(e);
-        alert("Lỗi kết nối mạng hoặc máy chủ!");
-    } finally {
-        // 4. TRẢ LẠI NÚT TRẠNG THÁI BAN ĐẦU (Dù thành công hay thất bại)
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-    }
-}
-
-// --- CẤU HÌNH SỬA SAI ---
-    const MAX_LAN_THU = 2; // Thầy đổi số này nếu muốn tăng/giảm số lượt
-    let soLanDaThu = 0;    // Biến đếm số lần đã bấm
-
-    function cheDoSuaSai() {
-        // 1. Chuyển đổi giao diện
-        document.getElementById('result-interface').style.display = 'none';
-        document.getElementById('exam-interface').style.display = 'block';
-        document.getElementById('questions-container').style.display = 'block';
-
-        // 2. THÊM ĐOẠN TIN NHẮN ĐỘNG VIÊN (Yêu cầu 1)
-        // Kiểm tra nếu chưa có thì mới tạo, tránh tạo trùng lặp
-        if (!document.getElementById('msg-dong-vien')) {
-            const msgDiv = document.createElement('div');
-            msgDiv.id = 'msg-dong-vien';
-            msgDiv.style.cssText = `
-                background-color: #e8f5e9; 
-                border: 1px solid #4caf50; 
-                color: #2e7d32;
-                padding: 15px; 
-                margin: 15px auto; 
-                border-radius: 8px; 
-                text-align: center; 
-                max-width: 90%;
-                font-family: Arial, sans-serif;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            `;
-            
-            msgDiv.innerHTML = `
-                <div style="font-size: 0.98em; margin-bottom: 8px;">
-                    Mỗi câu trả lời chưa đúng là một cơ hội để em hiểu rõ vấn đề. 
-                    Đừng sợ sai, quan trọng là học được gì từ lỗi sai đó để vững vàng hơn.
-                </div>
-                <div style="font-size: 0.95em; color: #555;">
-                    Hãy làm lại các câu ở dưới và nhấn "Kiểm tra lại" - em có 2 lần nhấn. 
-                    Lưu ý: Điểm số đã lưu trước đó không thay đổi.
-                </div>
-            `;
-
-            // Chèn vào ngay dưới Tiêu đề đề thi (thẻ h2 đầu tiên trong exam-interface)
-            const header = document.querySelector('#exam-interface h2');
-            header.parentNode.insertBefore(msgDiv, header.nextSibling);
-        } else {
-            // Nếu có rồi thì hiện nó lên (phòng trường hợp bị ẩn)
-            document.getElementById('msg-dong-vien').style.display = 'block';
-        }
-
-        // 3. Reset trạng thái
-        soLanDaThu = 0; 
-        
-        // 4. Lọc câu sai để hiển thị
-        const questionDivs = document.querySelectorAll('.question-box');
-        let countSai = 0;
-
-        questionDivs.forEach((div, index) => {
-            // Reset màu sắc cũ (nếu có)
-            div.style.border = "1px solid #ccc"; 
-            div.style.backgroundColor = "#fff";
-
-            let dataCau = window.ketQuaChiTiet[index];
-            let isWrong = false;
-
-            // Logic xác định câu sai
-            if (Array.isArray(dataCau.ketQua)) {
-                if (dataCau.ketQua.includes(false)) isWrong = true;
-            } else {
-                if (dataCau.diem == 0) isWrong = true;
-            }
-
-            if (isWrong) {
-                div.style.display = 'block'; 
-                div.style.borderLeft = '5px solid #f39c12'; // Đánh dấu nhẹ câu cần sửa
-                countSai++;
-            } else {
-                div.style.display = 'none';
+    function calcSessionScore() {
+        var sess = document.getElementById('calcSessionSelect').value;
+        var tbody = document.getElementById('tbodySession'); tbody.innerHTML = "";
+        if(!PROCESSED_DATA[sess]) { tbody.innerHTML = "<tr><td colspan='9' class='text-center'>Chưa có dữ liệu buổi này</td></tr>"; return; }
+        var wPeer = (RAW_DATA.config.TRONG_SO_PEER || 100)/100; var wSelf = (RAW_DATA.config.TRONG_SO_SELF || 0)/100; var formula = RAW_DATA.config.CONG_THUC_CN || "NHAN_HE_SO";
+        var rows = [];
+        Object.keys(PROCESSED_DATA[sess]).sort((a,b)=>a-b).forEach(g => {
+            var d = PROCESSED_DATA[sess][g]; var pScore = d.peerCount > 0 ? d.peerTotal/d.peerCount : 0; var sScore = d.selfCount > 0 ? d.selfTotal/d.selfCount : 0;
+            var wp = wPeer, ws = wSelf; if(ws > 0 && sScore == 0) { wp = 1; ws = 0; }
+            var grpScore = (pScore * wp) + (sScore * ws);
+            for(var mID in d.membersPoints) {
+                var pts = d.membersPoints[mID]; var avgContrib = pts.reduce((a,b)=>a+b,0)/pts.length; var final = 0;
+                if(formula == "CONG_TRU") final = grpScore + (avgContrib - 10); else final = grpScore * (avgContrib/10);
+                rows.push({ sess: sess, grp: g, msv: mID, name: ALL_STUDENTS[mID] ? ALL_STUDENTS[mID].name : mID, p: pScore, s: sScore, gSc: grpScore, c: avgContrib, f: final });
             }
         });
-
-        // 5. Cập nhật nút bấm
-        const btnSubmit = document.querySelector('#exam-interface .btn');
-        // Thay thế nút cũ bằng nút mới để xóa sạch các sự kiện cũ
-        let newBtn = btnSubmit.cloneNode(true);
-        btnSubmit.parentNode.replaceChild(newBtn, btnSubmit);
-        
-        newBtn.id = "btn-check-again"; // Đặt ID để dễ gọi
-        newBtn.innerHTML = `KIỂM TRA LẠI (Còn ${MAX_LAN_THU} lượt)`;
-        newBtn.style.background = "#f39c12"; 
-        newBtn.disabled = false;
-        newBtn.onclick = chamDiemTaiCho; 
-
-        window.scrollTo(0, 0);
+        rows.forEach(r => { tbody.innerHTML += `<tr><td>${r.sess}</td><td>${r.grp}</td><td>${r.msv}</td><td>${r.name}</td><td>${r.p.toFixed(2)}</td><td>${r.s.toFixed(2)}</td><td class="fw-bold text-primary">${r.gSc.toFixed(2)}</td><td>${r.c.toFixed(2)}</td><td class="fw-bold text-danger">${r.f.toFixed(2)}</td></tr>`; });
     }
 
-    function chamDiemTaiCho() {
-        const btn = document.getElementById('btn-check-again');
+    function calcFinalScore() {
+        var maxSession = Number(RAW_DATA.config.SO_BUOI) || 2;
+        var headerRow = `<th>Mã SV</th><th>Họ Tên</th><th>Nhóm</th>`; for(var i=1; i<=maxSession; i++) headerRow += `<th>Buổi ${i}</th>`; headerRow += `<th class="bg-warning">TỔNG KẾT</th>`; document.getElementById('trFinalHeader').innerHTML = headerRow;
+        var tbody = document.getElementById('tbodyFinal'); tbody.innerHTML = "";
+        var studentScores = {}; var wPeer = (RAW_DATA.config.TRONG_SO_PEER || 100)/100; var wSelf = (RAW_DATA.config.TRONG_SO_SELF || 0)/100; var formula = RAW_DATA.config.CONG_THUC_CN || "NHAN_HE_SO";
+        for(var s in PROCESSED_DATA) { for(var g in PROCESSED_DATA[s]) { var d = PROCESSED_DATA[s][g]; var pScore = d.peerCount > 0 ? d.peerTotal/d.peerCount : 0; var sScore = d.selfCount > 0 ? d.selfTotal/d.selfCount : 0; var wp = wPeer, ws = wSelf; if(ws > 0 && sScore == 0) { wp = 1; ws = 0; } var grpScore = (pScore * wp) + (sScore * ws); for(var mID in d.membersPoints) { var pts = d.membersPoints[mID]; var avgContrib = pts.reduce((a,b)=>a+b,0)/pts.length; var final = (formula == "CONG_TRU") ? (grpScore + avgContrib - 10) : (grpScore * avgContrib/10); if(!studentScores[mID]) studentScores[mID] = {}; studentScores[mID][s] = final; } } }
+        var svList = Object.keys(ALL_STUDENTS).filter(id => ALL_STUDENTS[id].class); svList.sort();
+        svList.forEach(id => { var sInfo = ALL_STUDENTS[id]; var scoresHtml = ""; var sum = 0; for(var i=1; i<=maxSession; i++) { var sc = studentScores[id] ? studentScores[id][i] : undefined; if(sc !== undefined) { scoresHtml += `<td>${sc.toFixed(2)}</td>`; sum += sc; } else { scoresHtml += `<td class="text-muted">-</td>`; } } var final = sum / maxSession; tbody.innerHTML += `<tr><td>${id}</td><td>${sInfo.name}</td><td>${sInfo.group}</td>${scoresHtml}<td class="fw-bold bg-light">${final.toFixed(2)}</td></tr>`; });
+    }
+
+    function exportExcel(tableId, filename) { var wb = XLSX.utils.table_to_book(document.getElementById(tableId), {sheet:"Sheet 1"}); XLSX.writeFile(wb, filename + ".xlsx"); }
+
+    // --- 5. RENDER OVERVIEW (CŨ) ---
+    function renderOverview() {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.nav-link')[0].classList.add('active');
+        var analysis = analyzeData();
+        var topGroupsHtml = analysis.topGroups.map((g, i) => `<tr><td>${i+1}</td><td>Buổi ${g.s} - Nhóm ${g.g}</td><td class="fw-bold text-primary">${g.final.toFixed(2)}</td></tr>`).join('');
+        var topMembersHtml = analysis.topMembers.map((m, i) => { var svName = ALL_STUDENTS[m.id] ? ALL_STUDENTS[m.id].name : m.id; return `<tr><td>${i+1}</td><td>${svName}</td><td>B${m.s}-N${m.g}</td><td class="fw-bold text-success">${m.pt.toFixed(2)}</td></tr>`; }).join('');
+        var html = `<h3 class="mb-4 fw-bold text-dark"><i class="bi bi-speedometer2"></i> TỔNG QUAN ĐÁNH GIÁ</h3><div class="row mb-4"><div class="col-md-6 mb-3"><div class="card h-100 border-0 shadow-sm"><div class="card-header bg-primary text-white fw-bold"><i class="bi bi-trophy"></i> TOP 3 NHÓM XUẤT SẮC</div><div class="card-body p-0"><table class="table table-striped mb-0"><thead><tr><th>#</th><th>Nhóm</th><th>Điểm Final</th></tr></thead><tbody>${topGroupsHtml}</tbody></table></div></div></div><div class="col-md-6 mb-3"><div class="card h-100 border-0 shadow-sm"><div class="card-header bg-success text-white fw-bold"><i class="bi bi-person-check"></i> TOP 3 CÁ NHÂN ĐÓNG GÓP CAO (KHÁC NHÓM)</div><div class="card-body p-0"><table class="table table-striped mb-0"><thead><tr><th>#</th><th>Sinh viên</th><th>Nhóm</th><th>Điểm ĐG</th></tr></thead><tbody>${topMembersHtml}</tbody></table></div></div></div></div><div class="row">${renderWidget('Tự tin thái quá', 'text-danger', 'bi-arrow-up-right-circle', analysis.overConf)}${renderWidget('Làm tốt hơn nghĩ', 'text-success', 'bi-arrow-down-left-circle', analysis.underConf)}${renderWidget('Tự nhận thức tốt', 'text-info', 'bi-check-circle', analysis.bestAware)}</div>`;
+        document.getElementById('mainView').innerHTML = html;
+    }
+    function renderWidget(title, colorCls, icon, data) { if(!data) return ''; var diffLabel = data.diff > 0 ? `+${data.diff.toFixed(2)}` : data.diff.toFixed(2); return `<div class="col-md-4 mb-3"><div class="stat-card position-relative border-start border-4 border-${colorCls.split('-')[1]}"><h6 class="text-muted text-uppercase fw-bold">${title}</h6><h3 class="fw-bold my-2">Buổi ${data.s} - Nhóm ${data.g}</h3><div class="${colorCls} fw-bold mt-2">Chênh lệch: <span class="badge bg-light ${colorCls} border">${diffLabel}</span></div><div class="small text-muted mt-1">Self: ${data.self.toFixed(2)} | Peer: ${data.peer.toFixed(2)}</div><i class="bi ${icon} stat-icon text-dark"></i></div></div>`; }
+    function analyzeData() {
+        var groups = []; var allMembers = []; var wPeer = (RAW_DATA.config.TRONG_SO_PEER || 100)/100; var wSelf = (RAW_DATA.config.TRONG_SO_SELF || 0)/100;
+        for(var s in PROCESSED_DATA) { for(var g in PROCESSED_DATA[s]) { var d = PROCESSED_DATA[s][g]; var pScore = d.peerCount > 0 ? d.peerTotal/d.peerCount : 0; var sScore = d.selfCount > 0 ? d.selfTotal/d.selfCount : 0; var final = (pScore * wPeer) + (sScore * wSelf); if(pScore > 0 && sScore > 0) { var diff = sScore - pScore; groups.push({ s:s, g:g, peer:pScore, self:sScore, final:final, diff:diff, absDiff: Math.abs(diff) }); } for(var mID in d.membersPoints) { var pts = d.membersPoints[mID]; var avg = pts.reduce((a,b)=>a+b,0)/pts.length; allMembers.push({ s:s, g:g, id:mID, pt:avg }); } } }
+        allMembers.sort((a,b) => b.pt - a.pt); var top3Members = []; var usedGroups = new Set(); for(var m of allMembers) { var groupKey = m.s + "-" + m.g; if(!usedGroups.has(groupKey)) { top3Members.push(m); usedGroups.add(groupKey); } if(top3Members.length >= 3) break; } groups.sort((a,b) => b.final - a.final);
+        return { topGroups: groups.slice(0, 3), topMembers: top3Members, overConf: [...groups].sort((a,b) => b.diff - a.diff)[0], underConf: [...groups].sort((a,b) => a.diff - b.diff)[0], bestAware: [...groups].sort((a,b) => a.absDiff - b.absDiff)[0] };
+    }
+
+    // --- 6. RENDER DETAIL (ĐÃ SỬA CHART DELAY) ---
+    function renderGroupDetail(s, g) {
+        var d = PROCESSED_DATA[s][g]; var pScore = d.peerCount > 0 ? (d.peerTotal/d.peerCount).toFixed(2) : "0.00"; var sScore = d.selfCount > 0 ? (d.selfTotal/d.selfCount).toFixed(2) : "0.00";
+        var missingPeerHtml = "", missingSelfHtml = ""; var countMP = 0, countMS = 0;
+        for(var svID in ALL_STUDENTS) { var std = ALL_STUDENTS[svID]; if(std.class) { if(String(std.group) != String(g) && !d.reviewers.has(String(svID))) { missingPeerHtml += `<div class="badge bg-light text-danger border border-danger me-1 mb-1 fw-normal">${std.name}</div>`; countMP++; } if(String(std.group) == String(g) && !d.selfReviewers.has(String(svID))) { missingSelfHtml += `<div class="badge bg-light text-danger border border-danger me-1 mb-1 fw-normal">${std.name}</div>`; countMS++; } } }
+        if(missingPeerHtml == "") missingPeerHtml = "<span class='text-success small'>Đầy đủ</span>"; if(missingSelfHtml == "") missingSelfHtml = "<span class='text-success small'>Đầy đủ</span>";
+        var memHtml = ""; var memList = []; for(var mID in d.membersPoints) { var avg = d.membersPoints[mID].reduce((a,b)=>a+b,0) / d.membersPoints[mID].length; memList.push({ id:mID, avg:avg }); } memList.sort((a,b) => b.avg - a.avg); memList.forEach((m, idx) => { var name = ALL_STUDENTS[m.id] ? ALL_STUDENTS[m.id].name : m.id; memHtml += `<tr><td>${idx+1}</td><td>${name}</td><td class="fw-bold text-center">${m.avg.toFixed(2)}</td></tr>`; });
+        var pCommHtml = d.comments.peer.map(c => `<div class="border-bottom py-1 small">🔹 ${c}</div>`).join('') || '<i class="text-muted">Không có</i>'; var sCommHtml = d.comments.self.map(c => `<div class="border-bottom py-1 small text-success">🔸 ${c}</div>`).join('') || '<i class="text-muted">Không có</i>'; var mCommHtml = d.comments.members.map(c => `<div class="border-bottom py-1 small text-secondary">▪️ ${c}</div>`).join('') || '<i class="text-muted">Không có</i>';
+        var html = `<div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2"><h3 class="fw-bold m-0 text-dark">BUỔI ${s} - NHÓM ${g}</h3><div><span class="badge bg-primary fs-6 me-2 shadow-sm">Peer: ${pScore} (${d.peerCount} phiếu)</span><span class="badge bg-success fs-6 shadow-sm">Self: ${sScore} (${d.selfCount} phiếu)</span></div></div><div class="row"><div class="col-lg-6 mb-4"><div class="card shadow-sm h-100"><div class="card-header fw-bold bg-white"><i class="bi bi-pie-chart"></i> BIỂU ĐỒ RADAR (ĐIỂM TRUNG BÌNH)</div><div class="card-body"><canvas id="detailChart"></canvas></div></div></div><div class="col-lg-6 mb-4"><div class="card shadow-sm h-100"><div class="card-header fw-bold bg-white"><i class="bi bi-people"></i> ĐIỂM ĐÓNG GÓP THÀNH VIÊN</div><div class="card-body p-0"><table class="table table-hover mb-0 align-middle"><thead class="table-light"><tr><th>#</th><th>Họ tên</th><th class="text-center">Điểm TB</th></tr></thead><tbody>${memHtml}</tbody></table></div></div></div></div><div class="row mb-4"><div class="col-12"><div class="card shadow-sm"><div class="card-header fw-bold bg-white"><i class="bi bi-chat-left-text"></i> NHẬN XÉT CHI TIẾT</div><div class="card-body"><div class="row"><div class="col-md-4 border-end"><h6 class="text-primary border-bottom pb-2 small fw-bold">PEER REVIEW</h6><div style="max-height: 250px; overflow-y: auto;">${pCommHtml}</div></div><div class="col-md-4 border-end"><h6 class="text-success border-bottom pb-2 small fw-bold">SELF REVIEW</h6><div style="max-height: 250px; overflow-y: auto;">${sCommHtml}</div></div><div class="col-md-4"><h6 class="text-secondary border-bottom pb-2 small fw-bold">THÀNH VIÊN (NỘI BỘ)</h6><div style="max-height: 250px; overflow-y: auto;">${mCommHtml}</div></div></div></div></div></div></div><div class="row"><div class="col-12"><div class="card shadow-sm border-danger"><div class="card-header bg-danger text-white fw-bold d-flex justify-content-between"><span><i class="bi bi-exclamation-triangle-fill"></i> DANH SÁCH CHƯA ĐÁNH GIÁ</span><span class="badge bg-white text-danger">${countMP + countMS} SV</span></div><div class="card-body"><div class="row"><div class="col-md-6 border-end"><h6 class="text-danger small fw-bold">CHƯA PEER REVIEW (${countMP})</h6><div style="max-height: 150px; overflow-y: auto;">${missingPeerHtml}</div></div><div class="col-md-6"><h6 class="text-danger small fw-bold">CHƯA SELF REVIEW (${countMS})</h6><div style="max-height: 150px; overflow-y: auto;">${missingSelfHtml}</div></div></div></div></div></div></div>`;
+        document.getElementById('mainView').innerHTML = html;
         
-        // --- LOGIC GIỚI HẠN SỐ LẦN (Yêu cầu 2) ---
-        soLanDaThu++;
-        let conLai = MAX_LAN_THU - soLanDaThu;
+        // VẼ BIỂU ĐỒ (CÓ DELAY ĐỂ ĐẢM BẢO DOM RENDER XONG)
+        setTimeout(() => { drawChart(d); }, 100);
+    }
 
-        let countDung = 0;
-        let totalSai = 0;
+    var detailChart = null;
+    function drawChart(dataObj) {
+        var canvas = document.getElementById('detailChart');
+        if(!canvas) { console.error("Canvas not found!"); return; }
+        var ctx = canvas.getContext('2d');
         
-        const questionDivs = document.querySelectorAll('.question-box');
+        var labels = RAW_DATA.criteria.map(c => c.title.substring(0, 15) + '...');
+        var pVals = dataObj.criteriaSums.peer.map(v => dataObj.peerCount > 0 ? (v/dataObj.peerCount) : 0);
+        var sVals = dataObj.criteriaSums.self.map(v => dataObj.selfCount > 0 ? (v/dataObj.selfCount) : 0);
 
-        // Logic chấm điểm (giữ nguyên logic cũ)
-        window.ketQuaChiTiet.forEach((dataCau, i) => {
-            const div = questionDivs[i];
-            if (div.style.display === 'none') return; 
+        if(detailChart) detailChart.destroy();
 
-            totalSai++;
-            let isCorrectNow = false;
-            let dapAnDung = dataCau.dapAn;
-            let userVal;
-            
-            // Dạng 1: Trắc nghiệm
-            if (typeof dapAnDung === 'string' && dapAnDung.length === 1) {
-                const el = document.querySelector(`input[name="c${i}"]:checked`);
-                userVal = el ? el.value : "";
-                if (userVal === dapAnDung) isCorrectNow = true;
-            }
-            // Dạng 2: Đúng Sai
-            else if (Array.isArray(dapAnDung)) {
-                let checkArr = [];
-                for(let j=0; j<4; j++) {
-                    const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
-                    let val = el ? (el.value === 'true') : null;
-                    checkArr.push(val === dapAnDung[j]);
-                }
-                if (!checkArr.includes(false)) isCorrectNow = true;
-            }
-            // Dạng 3: Điền số
-            else {
-                let el = document.getElementById(`c${i}`);
-                userVal = parseFloat(el.value.replace(',', '.'));
-                let valDung = parseFloat(dapAnDung);
-                if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) isCorrectNow = true;
-            }
-
-            if (isCorrectNow) {
-                div.style.border = "2px solid green";
-                div.style.backgroundColor = "#f0fff4";
-                countDung++;
-            } else {
-                div.style.border = "2px solid red";
-                div.style.backgroundColor = "#fff5f5";
+        detailChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Peer Review',
+                    data: pVals,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'Self Review',
+                    data: sVals,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: { r: { suggestedMin: 0, suggestedMax: 10 } },
+                plugins: { tooltip: { enabled: true } }, // BẬT TOOLTIP
+                maintainAspectRatio: false
             }
         });
-
-        // --- XỬ LÝ KẾT QUẢ SAU KHI CHẤM ---
-        if (countDung === totalSai) {
-            // Trường hợp 1: Sửa đúng hết
-            btn.innerHTML = "🎉 HOÀN THÀNH XUẤT SẮC!";
-            btn.style.background = "#28a745";
-            btn.disabled = true;
-            alert("TUYỆT VỜI! Em đã hiểu bài hơn rồi đấy.");
-            
-            //setTimeout(() => {
-            //    if(confirm("Hãy cố gắng và cẩn thận hơn ở những bài sau nhé!")) location.reload();
-            //}, 1000);
-
-        } else {
-            // Trường hợp 2: Vẫn còn sai
-            if (conLai > 0) {
-                // Vẫn còn lượt
-                btn.innerHTML = `KIỂM TRA LẠI (Còn ${conLai} lượt)`;
-                alert(`Em đã sửa đúng ${countDung}/${totalSai} câu.\nVẫn còn câu sai (viền đỏ), hãy cố gắng suy nghĩ thêm nhé!`);
-            } else {
-                // Hết lượt
-                btn.innerHTML = "ĐÃ HẾT LƯỢT KIỂM TRA";
-                btn.style.background = "#7f8c8d"; // Màu xám
-                btn.disabled = true;
-                alert("Rất tiếc, em đã hết lượt kiểm tra lại.\nHãy xem lại sách vở hoặc hỏi thầy cô để được giải đáp nhé!");
-            }
-        }
     }
-
-let clickCount = 0;
-let clickTimer;
-
-function xuLyBamNut(event) {
-    clickCount++;
-    clearTimeout(clickTimer);
-    
-    clickTimer = setTimeout(() => {
-        if (clickCount >= 23) {
-            // Mốc cao nhất: 23 lần trở lên
-            document.getElementById('modal-sieu-bi-mat').style.display = 'flex';
-        } 
-        else if (clickCount >= 10) {
-            // Mốc trung bình: từ 10 đến 22 lần
-            document.getElementById('modal-bi-mat').style.display = 'flex';
-        } 
-        else if (clickCount === 1) {
-            // Mốc thấp nhất: chỉ 1 lần
-            document.getElementById('modal-huong-dan').style.display = 'flex';
-        }
-        
-        // Reset biến đếm sau khi đã mở popup thành công
-        clickCount = 0; 
-    }, 300); // 0.3 giây để đợi xem bạn có bấm tiếp không
-}
-
-function moModal(id) {
-    document.getElementById(id).style.display = 'flex';
-}
-
-function dongModal(id) {
-    document.getElementById(id).style.display = 'none';
-}
-
-
 </script>
-
 </body>
 </html>
