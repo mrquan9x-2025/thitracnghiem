@@ -245,6 +245,30 @@
         }
     }
 	
+	/* CSS cho Popup Modal */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+}
+.modal-content {
+    background: white; width: 90%; max-width: 600px; max-height: 85vh;
+    padding: 25px; border-radius: 12px; position: relative;
+    overflow-y: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+}
+.modal-close {
+    position: absolute; top: 10px; right: 15px; font-size: 28px;
+    cursor: pointer; color: #666;
+}
+#modal-body-content img {
+    max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px auto;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+	
     </style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -465,7 +489,7 @@
     }
 
     // --- THAY LINK API CỦA THẦY VÀO ĐÂY ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbybvwMJ_j4xnOJajxILIS1UjTbCo_vxSMddih_Kpbe7Nx1MYAPK0Y-pb7As318Aije_/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbwrijo6SO5gMM5u7Adr24IaUA7_UoDmb5GKHzNWABLZ-tIK1Fr6FyOpEmX_8Xa4h2pc/exec"; 
     // ---------------------------------------
 
     let currentExamConfig = {};
@@ -486,44 +510,32 @@
     // 1. LẤY ĐỐI TƯỢNG NÚT VÀ LƯU TRẠNG THÁI CŨ
     const btn = event.target; 
     const originalText = btn.innerHTML;
-
-    // --- XỬ LÝ HỌ TÊN THÔNG MINH ---
-    const nameInput = document.getElementById('hs-name');
-    let rawName = nameInput.value;
     
-    let cleanName = chuanHoaTen(rawName);
-    
-    if (!cleanName || cleanName.split(' ').length < 2) {
-        alert("Vui lòng nhập đầy đủ Họ và Tên (Ví dụ: Nguyễn Văn An)");
-        nameInput.focus();
-        return;
-    }
-
-    nameInput.value = cleanName;
-    studentName = cleanName; 
-
-    const code = document.getElementById('exam-code').value.trim();
-    examCode = code; 
-
-    if (!studentName || !examCode) {
-        alert("Vui lòng nhập đủ Họ Tên và Mã đề!");
-        return;
-    }
-
-    // 2. ĐỔI GIAO DIỆN NÚT THÀNH LOADING
+    // Vô hiệu hóa nút để tránh nhấn nhiều lần
     btn.disabled = true;
-    // Sử dụng class btn-loader mà bạn đã có sẵn trong CSS
-    btn.innerHTML = '<div class="btn-loader"></div> Đang tải đề...';
+    btn.innerHTML = "Đang tải...";
 
-    // Bỏ showLoader(true) cũ vì đã có loading tại nút
     try {
+        // Gọi Server lấy dữ liệu
         const res = await fetch(`${API_URL}?action=get_exam&maDe=${examCode}&t=${Date.now()}`).then(r => r.json());
         
+        // TRƯỜNG HỢP 1: LỖI (Mã không tồn tại, v.v.)
         if(res.status === 'error') { 
             alert(res.msg); 
             return; 
         }
         
+        // --- TRƯỜNG HỢP 2: MÃ ĐẶC BIỆT (POPUP) ---
+        // Chúng ta chèn logic này vào TRƯỚC khi gọi hideAll() 
+        // để màn hình chính vẫn hiện ở dưới lớp mờ của Popup
+        if (res.status === 'special') {
+            document.getElementById('modal-body-content').innerHTML = res.html;
+            document.getElementById('special-modal').style.display = 'flex';
+            return; // Dừng lại ở đây, không vào giao diện thi
+        }
+        // ----------------------------------------
+
+        // TRƯỜNG HỢP 3: VÀO THI BÌNH THƯỜNG
         hideAll();
         document.getElementById('exam-interface').style.display = 'block';
         document.getElementById('exam-title-display').innerText = res.data.tenDe;
@@ -537,7 +549,6 @@
         alert("Lỗi kết nối hoặc không tìm thấy đề!"); 
     } finally {
         // 3. TRẢ LẠI TRẠNG THÁI NÚT BAN ĐẦU
-        // Lệnh trong finally luôn chạy kể cả khi fetch thành công hay thất bại
         btn.disabled = false;
         btn.innerHTML = originalText;
     }
@@ -1194,8 +1205,27 @@ function dongModal(id) {
     document.getElementById(id).style.display = 'none';
 }
 
+function closeModal() {
+    // Ẩn modal đi
+    document.getElementById('special-modal').style.display = 'none';
+    
+    // Xóa nội dung cũ để lần sau mở cái khác không bị nháy nội dung cũ
+    document.getElementById('modal-body-content').innerHTML = "";
+    
+    // Tùy chọn: Nếu thầy muốn xóa trắng ô nhập mã sau khi đóng thông báo:
+    // document.getElementById('exam-code-input').value = ""; 
+}
 
 </script>
+
+<div id="special-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div id="modal-body-content">
+            </div>
+        <button class="btn" style="margin-top:20px" onclick="closeModal()">Đóng</button>
+    </div>
+</div>
 
 </body>
 </html>
