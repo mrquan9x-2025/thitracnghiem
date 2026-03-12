@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>629 HỌC TOÁN THẦY QUÂN</title>
+    <title>635 HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -1110,81 +1110,92 @@ async function vaoThi(event) {
     }
 
     function chamDiemTaiCho() {
-        const btn = document.getElementById('btn-check-again');
-        if (!btn || !window.ketQuaChiTiet) return;
+    const btn = document.getElementById('btn-check-again');
+    if (!btn || !window.ketQuaChiTiet) return;
 
-        soLanDaThu++;
-        let conLai = MAX_LAN_THU - soLanDaThu;
-        let countDung = 0;
-        let totalSai = 0;
+    soLanDaThu++;
+    let conLai = MAX_LAN_THU - soLanDaThu;
+    let countDung = 0;
+    let totalSai = 0;
+    
+    const questionDivs = document.querySelectorAll('.question-box');
+
+    window.ketQuaChiTiet.forEach((dataCau, i) => {
+        const div = questionDivs[i];
+        // 1. Bảo vệ: Nếu không thấy khung câu hỏi thì bỏ qua
+        if (!div || div.style.display === 'none') return; 
+
+        totalSai++;
+        let isCorrectNow = false;
+        let dapAnDung = dataCau.dapAn;
         
-        const questionDivs = document.querySelectorAll('.question-box');
-
-        window.ketQuaChiTiet.forEach((dataCau, i) => {
-            const div = questionDivs[i];
-            // Nếu không tìm thấy khung câu hỏi, bỏ qua để không gây lỗi
-            if (!div || div.style.display === 'none') return; 
-
-            totalSai++;
-            let isCorrectNow = false;
-            let dapAnDung = dataCau.dapAn;
-            
-            // --- DẠNG 1: TRẮC NGHIỆM ---
-            if (dataCau.dang === 1) { 
-                const el = document.querySelector(`input[name="c${i}"]:checked`);
-                if (el && el.value === dapAnDung) isCorrectNow = true;
-            } 
-            // --- DẠNG 2: ĐÚNG SAI ---
-            else if (dataCau.dang === 2) { 
-                let checkArr = [];
-                for(let j=0; j<4; j++) {
-                    const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
-                    // Bảo vệ: Nếu chưa chọn (null) thì coi như sai
-                    let val = el ? (el.value === 'true') : null;
+        // --- DẠNG 1: TRẮC NGHIỆM (Đáp án là 1 chữ cái A,B,C,D) ---
+        if (typeof dapAnDung === 'string' && dapAnDung.length === 1) { 
+            const el = document.querySelector(`input[name="c${i}"]:checked`);
+            // Nếu có chọn VÀ giá trị khớp với đáp án
+            if (el && el.value === dapAnDung) {
+                isCorrectNow = true;
+            }
+        } 
+        // --- DẠNG 2: ĐÚNG SAI (Đáp án là một Mảng/Array) ---
+        else if (Array.isArray(dapAnDung)) { 
+            let checkArr = [];
+            for(let j=0; j<4; j++) {
+                const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
+                if (el) {
+                    let val = (el.value === 'true');
                     checkArr.push(val === dapAnDung[j]);
-                }
-                if (checkArr.length === 4 && !checkArr.includes(false)) isCorrectNow = true;
-            } 
-            // --- DẠNG 3: ĐIỀN SỐ ---
-            else { 
-                const el = document.getElementById(`c${i}`);
-                // LỚP BẢO VỆ QUAN TRỌNG NHẤT Ở ĐÂY (Sửa lỗi dòng 1153 của thầy)
-                if (el) { 
-                    let userVal = parseFloat(el.value.replace(',', '.'));
-                    let valDung = parseFloat(dapAnDung);
-                    if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) isCorrectNow = true;
+                } else {
+                    checkArr.push(false); // Chưa chọn coi như sai ý đó
                 }
             }
-
-            // Cập nhật màu sắc giao diện
-            if (isCorrectNow) {
-                div.style.border = "2px solid green";
-                div.style.backgroundColor = "#f0fff4";
-                countDung++;
-            } else {
-                div.style.border = "2px solid red";
-                div.style.backgroundColor = "#fff5f5";
+            // Đúng cả 4 ý mới tính là đúng câu đó
+            if (checkArr.length === 4 && !checkArr.includes(false)) {
+                isCorrectNow = true;
             }
-        });
-
-        // Xử lý thông báo kết quả
-        if (countDung === totalSai) {
-            btn.innerHTML = "🎉 HOÀN THÀNH XUẤT SẮC!";
-            btn.style.background = "#28a745";
-            btn.disabled = true;
-            alert("TUYỆT VỜI! Em đã sửa đúng hết rồi.");
-        } else {
-            if (conLai > 0) {
-                btn.innerHTML = `KIỂM TRA LẠI (Còn ${conLai} lượt)`;
-                alert(`Em đúng được ${countDung}/${totalSai} câu sai. Hãy tiếp tục sửa những câu viền đỏ nhé!`);
-            } else {
-                btn.innerHTML = "ĐÃ HẾT LƯỢT KIỂM TRA";
-                btn.style.background = "#7f8c8d";
-                btn.disabled = true;
-                alert("Em đã hết lượt kiểm tra lại. Hãy xem đáp án để rút kinh nghiệm!");
+        } 
+        // --- DẠNG 3: ĐIỀN SỐ (Các trường hợp còn lại) ---
+        else { 
+            const el = document.getElementById(`c${i}`);
+            // 2. Bảo vệ: Chỉ đọc .value nếu el tồn tại (khắc phục lỗi null dòng 1153)
+            if (el && el.value.trim() !== "") { 
+                let userVal = parseFloat(el.value.replace(',', '.'));
+                let valDung = parseFloat(dapAnDung);
+                if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) {
+                    isCorrectNow = true;
+                }
             }
         }
+
+        // Cập nhật giao diện trực quan
+        if (isCorrectNow) {
+            div.style.border = "2px solid green";
+            div.style.backgroundColor = "#f0fff4";
+            countDung++;
+        } else {
+            div.style.border = "2px solid red";
+            div.style.backgroundColor = "#fff5f5";
+        }
+    });
+
+    // Hiển thị kết quả cho học sinh
+    if (countDung === totalSai) {
+        btn.innerHTML = "🎉 HOÀN THÀNH XUẤT SẮC!";
+        btn.style.background = "#28a745";
+        btn.disabled = true;
+        alert("Tuyệt vời! Em đã sửa đúng toàn bộ các câu sai.");
+    } else {
+        if (conLai > 0) {
+            btn.innerHTML = `KIỂM TRA LẠI (Còn ${conLai} lượt)`;
+            alert(`Em đã sửa đúng thêm ${countDung}/${totalSai} câu.\nHãy tiếp tục suy nghĩ những câu còn viền đỏ nhé!`);
+        } else {
+            btn.innerHTML = "ĐÃ HẾT LƯỢT KIỂM TRA";
+            btn.style.background = "#7f8c8d";
+            btn.disabled = true;
+            alert("Rất tiếc, em đã hết lượt tự sửa bài. Hãy xem đáp án chi tiết nhé!");
+        }
     }
+}
 
 let clickCount = 0;
 let clickTimer;
