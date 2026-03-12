@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HỌC TOÁN THẦY QUÂN 1143</title>
+    <title>1156 HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -506,53 +506,57 @@
         document.getElementById('result-interface').style.display = 'none';
     }
 
-    async function vaoThi(event) {
-    // 1. LẤY ĐỐI TƯỢNG NÚT VÀ LƯU TRẠNG THÁI CŨ
-    const btn = event.target; 
-    const originalText = btn.innerHTML;
-    
-    // Vô hiệu hóa nút để tránh nhấn nhiều lần
-    btn.disabled = true;
-    btn.innerHTML = "Đang tải...";
+async function vaoThi(event) {
+        // --- 1. LẤY GIÁ TRỊ TỪ Ô NHẬP LIỆU ---
+        // Thầy kiểm tra đúng ID của ô nhập mã đề và ô nhập tên nhé
+        examCode = document.getElementById('exam-code').value.trim(); 
+        studentName = document.getElementById('hs-name').value.trim();
 
-    try {
-        // Gọi Server lấy dữ liệu
-        const res = await fetch(`${API_URL}?action=get_exam&maDe=${examCode}&t=${Date.now()}`).then(r => r.json());
-        
-        // TRƯỜNG HỢP 1: LỖI (Mã không tồn tại, v.v.)
-        if(res.status === 'error') { 
-            alert(res.msg); 
-            return; 
+        if (!examCode || !studentName) {
+            alert("Vui lòng nhập đầy đủ Họ tên và Mã đề!");
+            return;
         }
-        
-        // --- TRƯỜNG HỢP 2: MÃ ĐẶC BIỆT (POPUP) ---
-        // Chúng ta chèn logic này vào TRƯỚC khi gọi hideAll() 
-        // để màn hình chính vẫn hiện ở dưới lớp mờ của Popup
-        if (res.status === 'special') {
-            document.getElementById('modal-body-content').innerHTML = res.html;
-            document.getElementById('special-modal').style.display = 'flex';
-            return; // Dừng lại ở đây, không vào giao diện thi
+
+        const btn = event.target; 
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = "Đang tải...";
+
+        try {
+            // --- 2. MÃ HÓA MÃ ĐỀ ĐỂ XỬ LÝ DẤU # ---
+            // Sử dụng encodeURIComponent để biến # thành %23 khi gửi đi
+            const safeCode = encodeURIComponent(examCode);
+            const res = await fetch(`${API_URL}?action=get_exam&maDe=${safeCode}&t=${Date.now()}`).then(r => r.json());
+            
+            if(res.status === 'error') { 
+                alert(res.msg); 
+                return; 
+            }
+            
+            // Trường hợp mã đặc biệt
+            if (res.status === 'special') {
+                document.getElementById('modal-body-content').innerHTML = res.html;
+                document.getElementById('special-modal').style.display = 'flex';
+                return;
+            }
+            
+            // Trường hợp vào thi bình thường
+            hideAll();
+            document.getElementById('exam-interface').style.display = 'block';
+            document.getElementById('exam-title-display').innerText = res.data.tenDe;
+            
+            currentExamConfig = res.data.config;
+            currentExamQuestions = res.data.cauHoi;
+            renderQuestions(res.data.cauHoi, res.data.config);
+
+        } catch(e) { 
+            console.error(e); 
+            alert("Lỗi kết nối hoặc không tìm thấy đề!"); 
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         }
-        // ----------------------------------------
-
-        // TRƯỜNG HỢP 3: VÀO THI BÌNH THƯỜNG
-        hideAll();
-        document.getElementById('exam-interface').style.display = 'block';
-        document.getElementById('exam-title-display').innerText = res.data.tenDe;
-        
-        currentExamConfig = res.data.config;
-        currentExamQuestions = res.data.cauHoi;
-        renderQuestions(res.data.cauHoi, res.data.config);
-
-    } catch(e) { 
-        console.error(e); 
-        alert("Lỗi kết nối hoặc không tìm thấy đề!"); 
-    } finally {
-        // 3. TRẢ LẠI TRẠNG THÁI NÚT BAN ĐẦU
-        btn.disabled = false;
-        btn.innerHTML = originalText;
     }
-}
 
     function renderQuestions(list, config) {
         let html = '';
