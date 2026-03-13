@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>638 HỌC TOÁN THẦY QUÂN</title>
+    <title>751 HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -1110,33 +1110,34 @@
 
             totalSai++;
             let isCorrectNow = false;
-            let dapAnDung = dataCau.dapAn;
-            let userVal;
-            
-            // Dạng 1: Trắc nghiệm
-            if (typeof dapAnDung === 'string' && dapAnDung.length === 1) {
-                const el = document.querySelector(`input[name="c${i}"]:checked`);
-                userVal = el ? el.value : "";
-                if (userVal === dapAnDung) isCorrectNow = true;
+           let dapAnDung = dataCau.dapAn;
+        let userVal;
+        const dangCau = currentExamQuestions[i].dang; // ← dùng nguồn đáng tin cậy
+        
+        // Dạng 1: Trắc nghiệm
+        if (dangCau === 1) {
+            const el = document.querySelector(`input[name="c${i}"]:checked`);
+            userVal = el ? el.value : "";
+            if (userVal === String(dapAnDung)) isCorrectNow = true;
+        }
+        // Dạng 2: Đúng Sai
+        else if (dangCau === 2) {
+            let checkArr = [];
+            for(let j=0; j<4; j++) {
+                const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
+                let val = el ? (el.value === 'true') : null;
+                checkArr.push(val === dapAnDung[j]);
             }
-            // Dạng 2: Đúng Sai
-            else if (Array.isArray(dapAnDung)) {
-                let checkArr = [];
-                for(let j=0; j<4; j++) {
-                    const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
-                    let val = el ? (el.value === 'true') : null;
-                    checkArr.push(val === dapAnDung[j]);
-                }
-                if (!checkArr.includes(false)) isCorrectNow = true;
-            }
-            // Dạng 3: Điền số
-            else {
-                let el = document.getElementById(`c${i}`);
-                if (!el) return; // ← THÊM DÒNG NÀY: bảo vệ null safety
-                userVal = parseFloat(el.value.replace(',', '.'));
-                let valDung = parseFloat(dapAnDung);
-                if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) isCorrectNow = true;
-            }
+            if (!checkArr.includes(false)) isCorrectNow = true;
+        }
+        // Dạng 3: Điền số
+        else {
+            let el = document.getElementById(`c${i}`);
+            if (!el) return;
+            userVal = parseFloat(el.value.replace(',', '.'));
+            let valDung = parseFloat(dapAnDung);
+            if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) isCorrectNow = true;
+        }  
 
             if (isCorrectNow) {
                 div.style.border = "2px solid green";
