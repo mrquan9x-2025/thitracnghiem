@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>946 HỌC TOÁN THẦY QUÂN</title>
+    <title>1018 HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -1103,24 +1103,36 @@
         
         const questionDivs = document.querySelectorAll('.question-box');
 
-        // Logic chấm điểm (Đã được sửa lại siêu an toàn)
+        // Logic chấm điểm
         window.ketQuaChiTiet.forEach((dataCau, i) => {
             const div = questionDivs[i];
             if (div.style.display === 'none') return; 
 
             totalSai++;
             let isCorrectNow = false;
-            let dapAnDung = dataCau.dapAn;
             let userVal;
             
-            // LẤY TRỰC TIẾP DẠNG CÂU HỎI TỪ CẤU HÌNH ĐỀ (Thay vì đoán dựa vào đáp án)
+            // ---------------------------------------------------------
+            // BƯỚC KHẮC PHỤC CHÚA TỂ: XỬ LÝ SỰ SAI LỆCH CẤU TRÚC JSON
+            // ---------------------------------------------------------
+            let dapAnDungRaw = dataCau.dapAn; 
+            let dapAnDung;
+            
+            // Nếu backend trả về nguyên một Object (vd: {id: 1, dang: 1, dapAn: "A"})
+            if (dapAnDungRaw !== null && typeof dapAnDungRaw === 'object' && !Array.isArray(dapAnDungRaw) && dapAnDungRaw.hasOwnProperty('dapAn')) {
+                dapAnDung = dapAnDungRaw.dapAn; // Bóc lấy chữ "A" ở bên trong
+            } else {
+                dapAnDung = dapAnDungRaw; // Nếu là định dạng V1 cũ thì giữ nguyên
+            }
+            // ---------------------------------------------------------
+
+            // Lấy dạng câu hỏi từ Cấu hình đề
             let dangCauHoi = currentExamQuestions[i].dang;
 
             // Dạng 1: Trắc nghiệm (4 đáp án A, B, C, D)
             if (dangCauHoi === 1) {
                 const el = document.querySelector(`input[name="c${i}"]:checked`);
                 userVal = el ? el.value : "";
-                // Thêm toString() và trim() để phòng trường hợp đáp án có khoảng trắng thừa từ Google Sheet
                 if (dapAnDung && userVal === dapAnDung.toString().trim().toUpperCase()) {
                     isCorrectNow = true;
                 }
@@ -1131,7 +1143,6 @@
                 for(let j=0; j<4; j++) {
                     const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
                     let val = el ? (el.value === 'true') : null;
-                    // Failsafe: Đảm bảo dapAnDung thực sự là mảng
                     if (Array.isArray(dapAnDung)) {
                         checkArr.push(val === dapAnDung[j]);
                     } else {
@@ -1143,7 +1154,7 @@
             // Dạng 3: Điền số/Trả lời ngắn
             else if (dangCauHoi === 3) {
                 let el = document.getElementById(`c${i}`);
-                if (el) { // Failsafe: Cực kỳ quan trọng, kiểm tra xem ô nhập liệu có tồn tại không
+                if (el) { 
                     userVal = parseFloat(el.value.replace(',', '.'));
                     let valDung = parseFloat(dapAnDung);
                     if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) isCorrectNow = true;
@@ -1163,13 +1174,11 @@
 
         // --- XỬ LÝ KẾT QUẢ SAU KHI CHẤM ---
         if (countDung === totalSai) {
-            // Sửa đúng hết
             btn.innerHTML = "🎉 HOÀN THÀNH XUẤT SẮC!";
             btn.style.background = "#28a745";
             btn.disabled = true;
             alert("TUYỆT VỜI! Em đã hiểu bài hơn rồi đấy.");
         } else {
-            // Vẫn còn sai
             if (conLai > 0) {
                 btn.innerHTML = `KIỂM TRA LẠI (Còn ${conLai} lượt)`;
                 alert(`Em đã sửa đúng ${countDung}/${totalSai} câu.\nVẫn còn câu sai (viền đỏ), hãy cố gắng suy nghĩ thêm nhé!`);
