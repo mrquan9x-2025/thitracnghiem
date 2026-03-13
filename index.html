@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1018 HỌC TOÁN THẦY QUÂN</title>
+    <title>1123 HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -512,10 +512,28 @@
         examCode = document.getElementById('exam-code').value.trim(); 
         studentName = document.getElementById('hs-name').value.trim();
 
-        if (!examCode || !studentName) {
-            alert("Vui lòng nhập đầy đủ Họ tên và Mã đề!");
-            return;
-        }
+        // --- XỬ LÝ HỌ TÊN THÔNG MINH ---
+    const nameInput = document.getElementById('hs-name');
+    let rawName = nameInput.value;
+    
+    let cleanName = chuanHoaTen(rawName);
+    
+    if (!cleanName || cleanName.split(' ').length < 2) {
+        alert("Vui lòng nhập đầy đủ Họ và Tên (Ví dụ: Nguyễn Văn An)");
+        nameInput.focus();
+        return;
+    }
+
+    nameInput.value = cleanName;
+    studentName = cleanName; 
+
+    const code = document.getElementById('exam-code').value.trim();
+    examCode = code; 
+
+    if (!studentName || !examCode) {
+        alert("Vui lòng nhập đủ Họ Tên và Mã đề!");
+        return;
+    }
 
         const btn = event.target; 
         const originalText = btn.innerHTML;
