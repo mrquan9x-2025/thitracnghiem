@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>200 HỌC TOÁN THẦY QUÂN</title>
+    <title>207 HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -1095,55 +1095,75 @@
     const btn = document.getElementById('btn-check-again');
     if (!btn || !window.ketQuaChiTiet) return;
 
+    // --- MÁY QUÉT X-QUANG TÌM LỖI ---
+    const questionDivs = document.querySelectorAll('.question-box');
+    console.log("🛠️ BẮT ĐẦU QUÉT LỖI CHẤM ĐIỂM:");
+    console.log("- Số liệu từ Server gửi về:", window.ketQuaChiTiet.length, "câu");
+    console.log("- Số khung câu hỏi trên màn hình:", questionDivs.length, "khung");
+    if (questionDivs.length !== window.ketQuaChiTiet.length) {
+        console.error("🚨 PHÁT HIỆN LỖI: Số khung HTML không khớp số câu hỏi. Tính năng Special Code có thể đã sinh ra một khung HTML thừa làm lệch thứ tự!");
+    }
+
+    if (typeof soLanDaThu === 'undefined') window.soLanDaThu = 0;
     soLanDaThu++;
     let conLai = MAX_LAN_THU - soLanDaThu;
     let countDung = 0;
     let totalSai = 0;
-    
-    const questionDivs = document.querySelectorAll('.question-box');
 
     window.ketQuaChiTiet.forEach((dataCau, i) => {
         const div = questionDivs[i];
-        // Bỏ qua nếu không tìm thấy div hoặc câu đó đang ẩn (đã đúng)
         if (!div || div.style.display === 'none') return; 
 
         totalSai++;
         let isCorrectNow = false;
         let dapAnDung = dataCau.dapAn;
 
-        // --- DẠNG 1: TRẮC NGHIỆM (A, B, C, D) ---
-        // Dựa trên logic cũ của thầy: Đáp án là chuỗi có độ dài 1
-        if (typeof dapAnDung === 'string' && dapAnDung.length === 1) {
+        // CÁCH MỚI: Nhìn vào màn hình xem có nút Radio không để xác định dạng bài (Bulletproof)
+        const isTracNghiem = document.querySelectorAll(`input[name="c${i}"]`).length > 0;
+        const isDungSai = document.querySelectorAll(`input[name="c${i}_0"]`).length > 0;
+        
+        let userValLog = "Chưa chọn/Trống";
+
+        if (isTracNghiem) { // TRẮC NGHIỆM
             const el = document.querySelector(`input[name="c${i}"]:checked`);
-            if (el && el.value === dapAnDung) {
+            if (el) {
+                userValLog = el.value;
+                // Ép kiểu về chữ và xóa khoảng trắng 2 đầu để chống lỗi vặt
+                if (el.value.toString().trim() === dapAnDung.toString().trim()) {
+                    isCorrectNow = true;
+                }
+            }
+        } 
+        else if (isDungSai) { // ĐÚNG SAI
+            let checkArr = [];
+            let tempVals = [];
+            for(let j=0; j<4; j++) {
+                const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
+                let userVal = el ? (el.value === 'true') : null;
+                tempVals.push(userVal);
+                checkArr.push(userVal === dapAnDung[j]);
+            }
+            userValLog = JSON.stringify(tempVals);
+            if (checkArr.length === 4 && !checkArr.includes(false)) {
                 isCorrectNow = true;
             }
         } 
-        // --- DẠNG 2: ĐÚNG SAI (Mảng [true, false...]) ---
-        else if (Array.isArray(dapAnDung)) {
-            let checkArr = [];
-            for(let j=0; j<4; j++) {
-                const el = document.querySelector(`input[name="c${i}_${j}"]:checked`);
-                // Logic cũ: so sánh giá trị tích với đáp án
-                let userVal = el ? (el.value === 'true') : null;
-                if (userVal === dapAnDung[j]) checkArr.push(true);
-            }
-            if (checkArr.length === 4) isCorrectNow = true;
-        } 
-        // --- DẠNG 3: ĐIỀN SỐ (Số thập phân) ---
-        else {
+        else { // ĐIỀN SỐ
             const el = document.getElementById(`c${i}`);
-            // ĐÂY LÀ DÒNG BẢO VỆ: Chỉ đọc .value nếu el tồn tại
             if (el && el.value.trim() !== "") {
-                let userVal = parseFloat(el.value.replace(',', '.'));
-                let valDung = parseFloat(dapAnDung);
-                if (!isNaN(userVal) && Math.abs(userVal - valDung) < 0.0001) {
+                userValLog = el.value.trim();
+                let userNum = parseFloat(el.value.replace(',', '.'));
+                let dungNum = parseFloat(dapAnDung);
+                if (!isNaN(userNum) && Math.abs(userNum - dungNum) < 0.0001) {
                     isCorrectNow = true;
                 }
             }
         }
 
-        // Cập nhật màu sắc hiển thị
+        // Báo cáo chi tiết từng câu ra Console
+        console.log(`Câu ${i+1} | Học sinh chọn: ${userValLog} | Đáp án hệ thống: ${dapAnDung} | Kết quả máy chấm: ${isCorrectNow ? "ĐÚNG" : "SAI"}`);
+
+        // Đổi màu
         if (isCorrectNow) {
             div.style.border = "2px solid green";
             div.style.backgroundColor = "#f0fff4";
@@ -1154,7 +1174,9 @@
         }
     });
 
-    // Xử lý nốt phần thông báo
+    console.log(`=> TỔNG KẾT: Sửa đúng ${countDung}/${totalSai} câu.`);
+
+    // Xử lý thông báo
     if (countDung === totalSai) {
         btn.innerHTML = "🎉 HOÀN THÀNH XUẤT SẮC!";
         btn.style.background = "#28a745";
@@ -1163,7 +1185,7 @@
     } else {
         if (conLai > 0) {
             btn.innerHTML = `KIỂM TRA LẠI (Còn ${conLai} lượt)`;
-            alert(`Sửa đúng thêm ${countDung}/${totalSai} câu. Những câu viền đỏ vẫn chưa đúng, cố gắng lên!`);
+            alert(`Sửa đúng ${countDung}/${totalSai} câu. Những câu viền đỏ vẫn chưa đúng, cố gắng lên!`);
         } else {
             btn.innerHTML = "ĐÃ HẾT LƯỢT KIỂM TRA";
             btn.style.background = "#7f8c8d";
