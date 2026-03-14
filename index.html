@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1146 HỌC TOÁN THẦY QUÂN</title>
+    <title>1153 HỌC TOÁN THẦY QUÂN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -468,16 +468,16 @@
         "Mỗi ngày học tập là một cơ hội để trở thành phiên bản tốt hơn của chính mình",
         "Hãy học khi người khác ngủ, lao động khi người khác lười nhác, chuẩn bị khi người khác chơi bời và có được giấc mơ của mình khi mọi người chỉ ao ước.",
         "Học tập giống như chèo thuyền ngược dòng, không tiến ắt sẽ lùi",
-		"Nếu bạn là học sinh lớp 12, hãy nhập mã #DEM thử xem",
-		"Nhạc không lời giúp bạn bớt căng thẳng và cảm thấy hào hứng hơn khi học đấy. Hãy nhập mã #MS",
-		"Bạn đã vượt qua câu đố #IQ98 chưa?"
+		"Nếu bạn là học sinh lớp 12, hãy nhập mã <span class=\"hashtag\">#DEM</span> thử xem",
+		"Nhạc không lời giúp bạn bớt căng thẳng và cảm thấy hào hứng hơn khi học đấy <span class=\"hashtag\">#MS</span>",
+		"Bạn đã vượt qua câu đố <span class=\"hashtag\">#IQ98</span> chưa?"
     ];
 
     // Tự động chọn 1 câu và hiển thị khi trang web tải xong
     document.addEventListener("DOMContentLoaded", function() {
         const randomSlogan = listSlogans[Math.floor(Math.random() * listSlogans.length)];
         const sloganElement = document.getElementById('slogan-display');
-        if(sloganElement) sloganElement.innerText = randomSlogan;
+        if(sloganElement) sloganElement.innerHTML = randomSlogan;
     });
     // -----------------------------------
 
